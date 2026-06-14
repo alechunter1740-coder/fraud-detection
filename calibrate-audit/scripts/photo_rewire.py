@@ -114,18 +114,21 @@ def do_audit():
     old = ('=ClearCollect(colAuditPhotos, Filter(Calibrate_Audit_Photos, StartsWith('
            '\'File name with extension\', If(varEditMode, varSelectedAudit.Title, varAuditKey) & "_")));')
     assert t.count(old) == 1, "scrAudit OnVisible collect not found uniquely"
+    # Read existing attachments straight from the live lists (not a local ClearCollect copy):
+    # copying a SharePoint record into a collection drops the typed Attachments sub-table, which
+    # makes Index(r.Attachments, i.Value).Value resolve to an Error type inside Collect().
     new = (
-        '=ClearCollect(colBagPhotos,      Filter(Audit_Bag_Failures,      Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)));\n'
-        '        ClearCollect(colMachinePhotos,  Filter(Audit_Machine_Failures,  Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)));\n'
-        '        ClearCollect(colOperatorPhotos, Filter(Audit_Operator_Failures, Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)));\n'
-        '        If(varEditMode && !varComingFromSummary,\n'
+        '=If(varEditMode && !varComingFromSummary,\n'
         '            Clear(colPhotos);\n'
-        '            ForAll(colMachinePhotos As r, ForAll(Sequence(CountRows(r.Attachments)) As i,\n'
-        '                Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})));\n'
-        '            ForAll(colOperatorPhotos As r, ForAll(Sequence(CountRows(r.Attachments)) As i,\n'
-        '                Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})));\n'
-        '            ForAll(colBagPhotos As r, ForAll(Sequence(CountRows(r.Attachments)) As i,\n'
-        '                Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})))\n'
+        '            ForAll(Filter(Audit_Machine_Failures,  Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,\n'
+        '                ForAll(Sequence(CountRows(r.Attachments)) As i,\n'
+        '                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})));\n'
+        '            ForAll(Filter(Audit_Operator_Failures, Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,\n'
+        '                ForAll(Sequence(CountRows(r.Attachments)) As i,\n'
+        '                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})));\n'
+        '            ForAll(Filter(Audit_Bag_Failures,      Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,\n'
+        '                ForAll(Sequence(CountRows(r.Attachments)) As i,\n'
+        '                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})))\n'
         '        );'
     )
     t = t.replace(old, new)

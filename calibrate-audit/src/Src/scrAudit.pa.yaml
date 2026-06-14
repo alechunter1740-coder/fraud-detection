@@ -12,17 +12,17 @@ Screens:
       Fill: =RGBA(255, 255, 255, 1)
       LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
       OnVisible: |-
-        =ClearCollect(colBagPhotos,      Filter(Audit_Bag_Failures,      Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)));
-        ClearCollect(colMachinePhotos,  Filter(Audit_Machine_Failures,  Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)));
-        ClearCollect(colOperatorPhotos, Filter(Audit_Operator_Failures, Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)));
-        If(varEditMode && !varComingFromSummary,
+        =If(varEditMode && !varComingFromSummary,
             Clear(colPhotos);
-            ForAll(colMachinePhotos As r, ForAll(Sequence(CountRows(r.Attachments)) As i,
-                Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})));
-            ForAll(colOperatorPhotos As r, ForAll(Sequence(CountRows(r.Attachments)) As i,
-                Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})));
-            ForAll(colBagPhotos As r, ForAll(Sequence(CountRows(r.Attachments)) As i,
-                Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})))
+            ForAll(Filter(Audit_Machine_Failures,  Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,
+                ForAll(Sequence(CountRows(r.Attachments)) As i,
+                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})));
+            ForAll(Filter(Audit_Operator_Failures, Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,
+                ForAll(Sequence(CountRows(r.Attachments)) As i,
+                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})));
+            ForAll(Filter(Audit_Bag_Failures,      Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,
+                ForAll(Sequence(CountRows(r.Attachments)) As i,
+                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})))
         );
         If(!varComingFromSummary,
             If(varEditMode,

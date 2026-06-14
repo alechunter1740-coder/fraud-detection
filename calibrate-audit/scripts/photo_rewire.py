@@ -116,19 +116,19 @@ def do_audit():
     assert t.count(old) == 1, "scrAudit OnVisible collect not found uniquely"
     # Read existing attachments straight from the live lists (not a local ClearCollect copy):
     # copying a SharePoint record into a collection drops the typed Attachments sub-table, which
-    # makes Index(r.Attachments, i.Value).Value resolve to an Error type inside Collect().
+    # makes Last(FirstN(r.Attachments, i.Value)).Value resolve to an Error type inside Collect().
     new = (
         '=If(varEditMode && !varComingFromSummary,\n'
         '            Clear(colPhotos);\n'
         '            ForAll(Filter(Audit_Machine_Failures,  Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,\n'
         '                ForAll(Sequence(CountRows(r.Attachments)) As i,\n'
-        '                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})));\n'
+        '                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Last(FirstN(r.Attachments, i.Value)).Value})));\n'
         '            ForAll(Filter(Audit_Operator_Failures, Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,\n'
         '                ForAll(Sequence(CountRows(r.Attachments)) As i,\n'
-        '                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})));\n'
+        '                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Last(FirstN(r.Attachments, i.Value)).Value})));\n'
         '            ForAll(Filter(Audit_Bag_Failures,      Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,\n'
         '                ForAll(Sequence(CountRows(r.Attachments)) As i,\n'
-        '                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})))\n'
+        '                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Last(FirstN(r.Attachments, i.Value)).Value})))\n'
         '        );'
     )
     t = t.replace(old, new)

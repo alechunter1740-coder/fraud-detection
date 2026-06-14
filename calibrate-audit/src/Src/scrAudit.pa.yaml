@@ -16,13 +16,13 @@ Screens:
             Clear(colPhotos);
             ForAll(Filter(Audit_Machine_Failures,  Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,
                 ForAll(Sequence(CountRows(r.Attachments)) As i,
-                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})));
+                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Last(FirstN(r.Attachments, i.Value)).Value})));
             ForAll(Filter(Audit_Operator_Failures, Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,
                 ForAll(Sequence(CountRows(r.Attachments)) As i,
-                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})));
+                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Last(FirstN(r.Attachments, i.Value)).Value})));
             ForAll(Filter(Audit_Bag_Failures,      Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,
                 ForAll(Sequence(CountRows(r.Attachments)) As i,
-                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Index(r.Attachments, i.Value).Value})))
+                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Last(FirstN(r.Attachments, i.Value)).Value})))
         );
         If(!varComingFromSummary,
             If(varEditMode,
@@ -359,7 +359,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varTotalPackages = 0, "", Text(varTotalPackages)))
+                                    Default: =If(varTotalPackages = 0, "", Text(varTotalPackages))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -373,9 +373,67 @@ Screens:
                                     RadiusTopLeft: =4
                                     RadiusTopRight: =4
                                     Size: =18
-                                    Width: =Parent.Width - 48
-                                    X: =24
+                                    Width: =Parent.Width - 140
+                                    X: =70
                                     Y: =lblTotalPackages.Y + lblTotalPackages.Height + 4
+                              - btnMinus_TotalPackages:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varTotalPackages <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtTotalPackages.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varTotalPackages, Max(varTotalPackages - 1, 0)); Reset(txtTotalPackages)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =24
+                                    Y: =txtTotalPackages.Y
+                              - btnPlus_TotalPackages:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtTotalPackages.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varTotalPackages, varTotalPackages + 1); Reset(txtTotalPackages)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtTotalPackages.X + txtTotalPackages.Width + 6
+                                    Y: =txtTotalPackages.Y
                         - crdTotalFailures:
                             Control: TypedDataCard@1.0.7
                             Variant: NumberEdit
@@ -490,7 +548,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varMF_LowVac = 0, "", Text(varMF_LowVac)))
+                                    Default: =If(varMF_LowVac = 0, "", Text(varMF_LowVac))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -504,9 +562,67 @@ Screens:
                                     RadiusTopLeft: =4
                                     RadiusTopRight: =4
                                     Size: =18
-                                    Width: =Parent.Width - 145
-                                    X: =36
+                                    Width: =Parent.Width - 245
+                                    X: =82
                                     Y: =lblMFLowVac.Y + lblMFLowVac.Height + 4
+                              - btnMinus_MFLowVac:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varMF_LowVac <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtMFLowVac.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varMF_LowVac, Max(varMF_LowVac - 1, 0)); Reset(txtMFLowVac)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtMFLowVac.Y
+                              - btnPlus_MFLowVac:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtMFLowVac.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varMF_LowVac, varMF_LowVac + 1); Reset(txtMFLowVac)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtMFLowVac.X + txtMFLowVac.Width + 6
+                                    Y: =txtMFLowVac.Y
                               - lblPct_MFLowVac:
                                   Control: Label@2.5.1
                                   Properties:
@@ -516,7 +632,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varMF_LowVac / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =105
-                                    X: =txtMFLowVac.X + txtMFLowVac.Width + 4
+                                    X: =btnPlus_MFLowVac.X + btnPlus_MFLowVac.Width + 6
                                     Y: =txtMFLowVac.Y + (txtMFLowVac.Height / 2) - 12
                               - iconCam_MFLowVac_1:
                                   Control: Classic/Icon@2.5.0
@@ -1073,7 +1189,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varMF_ColdSeal = 0, "", Text(varMF_ColdSeal)))
+                                    Default: =If(varMF_ColdSeal = 0, "", Text(varMF_ColdSeal))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -1090,6 +1206,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_MFColdSeal:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varMF_ColdSeal <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtMFColdSeal.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varMF_ColdSeal, Max(varMF_ColdSeal - 1, 0)); Reset(txtMFColdSeal)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtMFColdSeal.Y
+                              - btnPlus_MFColdSeal:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtMFColdSeal.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varMF_ColdSeal, varMF_ColdSeal + 1); Reset(txtMFColdSeal)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtMFColdSeal.X + txtMFColdSeal.Width + 6
+                                    Y: =txtMFColdSeal.Y
                               - lblPct_MFColdSeal:
                                   Control: Label@2.5.1
                                   Properties:
@@ -1099,7 +1273,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varMF_ColdSeal / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_MFColdSeal.X + btnPlus_MFColdSeal.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_MFColdSeal_1:
                                   Control: Classic/Icon@2.5.0
@@ -1656,7 +1830,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varMF_EdgeTear = 0, "", Text(varMF_EdgeTear)))
+                                    Default: =If(varMF_EdgeTear = 0, "", Text(varMF_EdgeTear))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -1673,6 +1847,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_MFEdgeTear:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varMF_EdgeTear <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtMFEdgeTear.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varMF_EdgeTear, Max(varMF_EdgeTear - 1, 0)); Reset(txtMFEdgeTear)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtMFEdgeTear.Y
+                              - btnPlus_MFEdgeTear:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtMFEdgeTear.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varMF_EdgeTear, varMF_EdgeTear + 1); Reset(txtMFEdgeTear)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtMFEdgeTear.X + txtMFEdgeTear.Width + 6
+                                    Y: =txtMFEdgeTear.Y
                               - lblPct_MFEdgeTear:
                                   Control: Label@2.5.1
                                   Properties:
@@ -1682,7 +1914,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varMF_EdgeTear / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_MFEdgeTear.X + btnPlus_MFEdgeTear.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_MFEdgeTear_1:
                                   Control: Classic/Icon@2.5.0
@@ -2239,7 +2471,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varMF_PullBack = 0, "", Text(varMF_PullBack)))
+                                    Default: =If(varMF_PullBack = 0, "", Text(varMF_PullBack))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -2256,6 +2488,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_MFPullBack:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varMF_PullBack <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtMFPullBack.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varMF_PullBack, Max(varMF_PullBack - 1, 0)); Reset(txtMFPullBack)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtMFPullBack.Y
+                              - btnPlus_MFPullBack:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtMFPullBack.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varMF_PullBack, varMF_PullBack + 1); Reset(txtMFPullBack)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtMFPullBack.X + txtMFPullBack.Width + 6
+                                    Y: =txtMFPullBack.Y
                               - lblPct_MFPullBack:
                                   Control: Label@2.5.1
                                   Properties:
@@ -2265,7 +2555,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varMF_PullBack / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_MFPullBack.X + btnPlus_MFPullBack.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_MFPullBack_1:
                                   Control: Classic/Icon@2.5.0
@@ -2822,7 +3112,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varMF_BurntSeals = 0, "", Text(varMF_BurntSeals)))
+                                    Default: =If(varMF_BurntSeals = 0, "", Text(varMF_BurntSeals))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -2839,6 +3129,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_MFBurntSeals:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varMF_BurntSeals <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtMFBurntSeals.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varMF_BurntSeals, Max(varMF_BurntSeals - 1, 0)); Reset(txtMFBurntSeals)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtMFBurntSeals.Y
+                              - btnPlus_MFBurntSeals:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtMFBurntSeals.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varMF_BurntSeals, varMF_BurntSeals + 1); Reset(txtMFBurntSeals)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtMFBurntSeals.X + txtMFBurntSeals.Width + 6
+                                    Y: =txtMFBurntSeals.Y
                               - lblPct_MFBurntSeals:
                                   Control: Label@2.5.1
                                   Properties:
@@ -2848,7 +3196,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varMF_BurntSeals / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_MFBurntSeals.X + btnPlus_MFBurntSeals.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_MFBurntSeals_1:
                                   Control: Classic/Icon@2.5.0
@@ -3405,7 +3753,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varMF_Other = 0, "", Text(varMF_Other)))
+                                    Default: =If(varMF_Other = 0, "", Text(varMF_Other))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -3422,6 +3770,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_MFOther:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varMF_Other <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtMFOther.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varMF_Other, Max(varMF_Other - 1, 0)); Reset(txtMFOther)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtMFOther.Y
+                              - btnPlus_MFOther:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtMFOther.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varMF_Other, varMF_Other + 1); Reset(txtMFOther)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtMFOther.X + txtMFOther.Width + 6
+                                    Y: =txtMFOther.Y
                               - lblPct_MFOther:
                                   Control: Label@2.5.1
                                   Properties:
@@ -3431,7 +3837,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varMF_Other / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_MFOther.X + btnPlus_MFOther.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_MFOther_1:
                                   Control: Classic/Icon@2.5.0
@@ -4074,7 +4480,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varOF_MeatInSeals = 0, "", Text(varOF_MeatInSeals)))
+                                    Default: =If(varOF_MeatInSeals = 0, "", Text(varOF_MeatInSeals))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -4091,6 +4497,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_OFMeatInSeals:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varOF_MeatInSeals <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFMeatInSeals.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_MeatInSeals, Max(varOF_MeatInSeals - 1, 0)); Reset(txtOFMeatInSeals)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtOFMeatInSeals.Y
+                              - btnPlus_OFMeatInSeals:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFMeatInSeals.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_MeatInSeals, varOF_MeatInSeals + 1); Reset(txtOFMeatInSeals)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtOFMeatInSeals.X + txtOFMeatInSeals.Width + 6
+                                    Y: =txtOFMeatInSeals.Y
                               - lblPct_OFMeatInSeals:
                                   Control: Label@2.5.1
                                   Properties:
@@ -4100,7 +4564,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varOF_MeatInSeals / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_OFMeatInSeals.X + btnPlus_OFMeatInSeals.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_OFMeatInSeals_1:
                                   Control: Classic/Icon@2.5.0
@@ -4657,7 +5121,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varOF_ProdReject = 0, "", Text(varOF_ProdReject)))
+                                    Default: =If(varOF_ProdReject = 0, "", Text(varOF_ProdReject))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -4674,6 +5138,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_OFProdReject:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varOF_ProdReject <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFProdReject.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_ProdReject, Max(varOF_ProdReject - 1, 0)); Reset(txtOFProdReject)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtOFProdReject.Y
+                              - btnPlus_OFProdReject:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFProdReject.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_ProdReject, varOF_ProdReject + 1); Reset(txtOFProdReject)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtOFProdReject.X + txtOFProdReject.Width + 6
+                                    Y: =txtOFProdReject.Y
                               - lblPct_OFProdReject:
                                   Control: Label@2.5.1
                                   Properties:
@@ -4683,7 +5205,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varOF_ProdReject / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_OFProdReject.X + btnPlus_OFProdReject.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_OFProdReject_1:
                                   Control: Classic/Icon@2.5.0
@@ -5240,7 +5762,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varOF_MultiplePleat = 0, "", Text(varOF_MultiplePleat)))
+                                    Default: =If(varOF_MultiplePleat = 0, "", Text(varOF_MultiplePleat))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -5257,6 +5779,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_OFMultiplePleat:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varOF_MultiplePleat <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFMultiplePleat.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_MultiplePleat, Max(varOF_MultiplePleat - 1, 0)); Reset(txtOFMultiplePleat)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtOFMultiplePleat.Y
+                              - btnPlus_OFMultiplePleat:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFMultiplePleat.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_MultiplePleat, varOF_MultiplePleat + 1); Reset(txtOFMultiplePleat)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtOFMultiplePleat.X + txtOFMultiplePleat.Width + 6
+                                    Y: =txtOFMultiplePleat.Y
                               - lblPct_OFMultiplePleat:
                                   Control: Label@2.5.1
                                   Properties:
@@ -5266,7 +5846,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varOF_MultiplePleat / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_OFMultiplePleat.X + btnPlus_OFMultiplePleat.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_OFMultiplePleat_1:
                                   Control: Classic/Icon@2.5.0
@@ -5823,7 +6403,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varOF_BagTear = 0, "", Text(varOF_BagTear)))
+                                    Default: =If(varOF_BagTear = 0, "", Text(varOF_BagTear))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -5840,6 +6420,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_OFBagTear:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varOF_BagTear <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFBagTear.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_BagTear, Max(varOF_BagTear - 1, 0)); Reset(txtOFBagTear)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtOFBagTear.Y
+                              - btnPlus_OFBagTear:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFBagTear.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_BagTear, varOF_BagTear + 1); Reset(txtOFBagTear)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtOFBagTear.X + txtOFBagTear.Width + 6
+                                    Y: =txtOFBagTear.Y
                               - lblPct_OFBagTear:
                                   Control: Label@2.5.1
                                   Properties:
@@ -5849,7 +6487,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varOF_BagTear / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_OFBagTear.X + btnPlus_OFBagTear.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_OFBagTear_1:
                                   Control: Classic/Icon@2.5.0
@@ -6406,7 +7044,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varOF_IncompleteSeal = 0, "", Text(varOF_IncompleteSeal)))
+                                    Default: =If(varOF_IncompleteSeal = 0, "", Text(varOF_IncompleteSeal))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -6423,6 +7061,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_OFIncompleteSeal:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varOF_IncompleteSeal <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFIncompleteSeal.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_IncompleteSeal, Max(varOF_IncompleteSeal - 1, 0)); Reset(txtOFIncompleteSeal)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtOFIncompleteSeal.Y
+                              - btnPlus_OFIncompleteSeal:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFIncompleteSeal.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_IncompleteSeal, varOF_IncompleteSeal + 1); Reset(txtOFIncompleteSeal)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtOFIncompleteSeal.X + txtOFIncompleteSeal.Width + 6
+                                    Y: =txtOFIncompleteSeal.Y
                               - lblPct_OFIncompleteSeal:
                                   Control: Label@2.5.1
                                   Properties:
@@ -6432,7 +7128,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varOF_IncompleteSeal / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_OFIncompleteSeal.X + btnPlus_OFIncompleteSeal.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_OFIncompleteSeal_1:
                                   Control: Classic/Icon@2.5.0
@@ -6989,7 +7685,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varOF_UncoveredBone = 0, "", Text(varOF_UncoveredBone)))
+                                    Default: =If(varOF_UncoveredBone = 0, "", Text(varOF_UncoveredBone))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -7006,6 +7702,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_OFUncoveredBone:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varOF_UncoveredBone <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFUncoveredBone.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_UncoveredBone, Max(varOF_UncoveredBone - 1, 0)); Reset(txtOFUncoveredBone)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtOFUncoveredBone.Y
+                              - btnPlus_OFUncoveredBone:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFUncoveredBone.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_UncoveredBone, varOF_UncoveredBone + 1); Reset(txtOFUncoveredBone)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtOFUncoveredBone.X + txtOFUncoveredBone.Width + 6
+                                    Y: =txtOFUncoveredBone.Y
                               - lblPct_OFUncoveredBone:
                                   Control: Label@2.5.1
                                   Properties:
@@ -7015,7 +7769,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varOF_UncoveredBone / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_OFUncoveredBone.X + btnPlus_OFUncoveredBone.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_OFUncoveredBone_1:
                                   Control: Classic/Icon@2.5.0
@@ -7572,7 +8326,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varOF_PullBack = 0, "", Text(varOF_PullBack)))
+                                    Default: =If(varOF_PullBack = 0, "", Text(varOF_PullBack))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -7589,6 +8343,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_OFPullBack:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varOF_PullBack <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFPullBack.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_PullBack, Max(varOF_PullBack - 1, 0)); Reset(txtOFPullBack)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtOFPullBack.Y
+                              - btnPlus_OFPullBack:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFPullBack.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_PullBack, varOF_PullBack + 1); Reset(txtOFPullBack)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtOFPullBack.X + txtOFPullBack.Width + 6
+                                    Y: =txtOFPullBack.Y
                               - lblPct_OFPullBack:
                                   Control: Label@2.5.1
                                   Properties:
@@ -7598,7 +8410,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varOF_PullBack / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_OFPullBack.X + btnPlus_OFPullBack.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_OFPullBack_1:
                                   Control: Classic/Icon@2.5.0
@@ -8155,7 +8967,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varOF_TwoPerPlaten = 0, "", Text(varOF_TwoPerPlaten)))
+                                    Default: =If(varOF_TwoPerPlaten = 0, "", Text(varOF_TwoPerPlaten))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -8172,6 +8984,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_OFTwoPerPlaten:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varOF_TwoPerPlaten <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFTwoPerPlaten.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_TwoPerPlaten, Max(varOF_TwoPerPlaten - 1, 0)); Reset(txtOFTwoPerPlaten)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtOFTwoPerPlaten.Y
+                              - btnPlus_OFTwoPerPlaten:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFTwoPerPlaten.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_TwoPerPlaten, varOF_TwoPerPlaten + 1); Reset(txtOFTwoPerPlaten)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtOFTwoPerPlaten.X + txtOFTwoPerPlaten.Width + 6
+                                    Y: =txtOFTwoPerPlaten.Y
                               - lblPct_OFTwoPerPlaten:
                                   Control: Label@2.5.1
                                   Properties:
@@ -8181,7 +9051,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varOF_TwoPerPlaten / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_OFTwoPerPlaten.X + btnPlus_OFTwoPerPlaten.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_OFTwoPerPlaten_1:
                                   Control: Classic/Icon@2.5.0
@@ -8738,7 +9608,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varOF_Other = 0, "", Text(varOF_Other)))
+                                    Default: =If(varOF_Other = 0, "", Text(varOF_Other))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -8755,6 +9625,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_OFOther:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varOF_Other <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFOther.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_Other, Max(varOF_Other - 1, 0)); Reset(txtOFOther)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtOFOther.Y
+                              - btnPlus_OFOther:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtOFOther.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varOF_Other, varOF_Other + 1); Reset(txtOFOther)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtOFOther.X + txtOFOther.Width + 6
+                                    Y: =txtOFOther.Y
                               - lblPct_OFOther:
                                   Control: Label@2.5.1
                                   Properties:
@@ -8764,7 +9692,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varOF_Other / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_OFOther.X + btnPlus_OFOther.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_OFOther_1:
                                   Control: Classic/Icon@2.5.0
@@ -9407,7 +10335,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varBRF_HoleBeforeShrink = 0, "", Text(varBRF_HoleBeforeShrink)))
+                                    Default: =If(varBRF_HoleBeforeShrink = 0, "", Text(varBRF_HoleBeforeShrink))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -9424,6 +10352,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_BRFHoleBeforeShrink:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varBRF_HoleBeforeShrink <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFHoleBeforeShrink.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_HoleBeforeShrink, Max(varBRF_HoleBeforeShrink - 1, 0)); Reset(txtBRFHoleBeforeShrink)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtBRFHoleBeforeShrink.Y
+                              - btnPlus_BRFHoleBeforeShrink:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFHoleBeforeShrink.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_HoleBeforeShrink, varBRF_HoleBeforeShrink + 1); Reset(txtBRFHoleBeforeShrink)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtBRFHoleBeforeShrink.X + txtBRFHoleBeforeShrink.Width + 6
+                                    Y: =txtBRFHoleBeforeShrink.Y
                               - lblPct_BRFHoleBeforeShrink:
                                   Control: Label@2.5.1
                                   Properties:
@@ -9433,7 +10419,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varBRF_HoleBeforeShrink / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_BRFHoleBeforeShrink.X + btnPlus_BRFHoleBeforeShrink.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_BRFHoleBeforeShrink_1:
                                   Control: Classic/Icon@2.5.0
@@ -9990,7 +10976,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varBRF_HoleAfterShrink = 0, "", Text(varBRF_HoleAfterShrink)))
+                                    Default: =If(varBRF_HoleAfterShrink = 0, "", Text(varBRF_HoleAfterShrink))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -10007,6 +10993,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_BRFHoleAfterShrink:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varBRF_HoleAfterShrink <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFHoleAfterShrink.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_HoleAfterShrink, Max(varBRF_HoleAfterShrink - 1, 0)); Reset(txtBRFHoleAfterShrink)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtBRFHoleAfterShrink.Y
+                              - btnPlus_BRFHoleAfterShrink:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFHoleAfterShrink.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_HoleAfterShrink, varBRF_HoleAfterShrink + 1); Reset(txtBRFHoleAfterShrink)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtBRFHoleAfterShrink.X + txtBRFHoleAfterShrink.Width + 6
+                                    Y: =txtBRFHoleAfterShrink.Y
                               - lblPct_BRFHoleAfterShrink:
                                   Control: Label@2.5.1
                                   Properties:
@@ -10016,7 +11060,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varBRF_HoleAfterShrink / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_BRFHoleAfterShrink.X + btnPlus_BRFHoleAfterShrink.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_BRFHoleAfterShrink_1:
                                   Control: Classic/Icon@2.5.0
@@ -10573,7 +11617,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varBRF_CoveredBone = 0, "", Text(varBRF_CoveredBone)))
+                                    Default: =If(varBRF_CoveredBone = 0, "", Text(varBRF_CoveredBone))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -10590,6 +11634,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_BRFCoveredBone:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varBRF_CoveredBone <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFCoveredBone.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_CoveredBone, Max(varBRF_CoveredBone - 1, 0)); Reset(txtBRFCoveredBone)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtBRFCoveredBone.Y
+                              - btnPlus_BRFCoveredBone:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFCoveredBone.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_CoveredBone, varBRF_CoveredBone + 1); Reset(txtBRFCoveredBone)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtBRFCoveredBone.X + txtBRFCoveredBone.Width + 6
+                                    Y: =txtBRFCoveredBone.Y
                               - lblPct_BRFCoveredBone:
                                   Control: Label@2.5.1
                                   Properties:
@@ -10599,7 +11701,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varBRF_CoveredBone / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_BRFCoveredBone.X + btnPlus_BRFCoveredBone.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_BRFCoveredBone_1:
                                   Control: Classic/Icon@2.5.0
@@ -11156,7 +12258,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varBRF_SinglePleat = 0, "", Text(varBRF_SinglePleat)))
+                                    Default: =If(varBRF_SinglePleat = 0, "", Text(varBRF_SinglePleat))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -11173,6 +12275,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_BRFSinglePleat:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varBRF_SinglePleat <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFSinglePleat.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_SinglePleat, Max(varBRF_SinglePleat - 1, 0)); Reset(txtBRFSinglePleat)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtBRFSinglePleat.Y
+                              - btnPlus_BRFSinglePleat:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFSinglePleat.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_SinglePleat, varBRF_SinglePleat + 1); Reset(txtBRFSinglePleat)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtBRFSinglePleat.X + txtBRFSinglePleat.Width + 6
+                                    Y: =txtBRFSinglePleat.Y
                               - lblPct_BRFSinglePleat:
                                   Control: Label@2.5.1
                                   Properties:
@@ -11182,7 +12342,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varBRF_SinglePleat / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_BRFSinglePleat.X + btnPlus_BRFSinglePleat.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_BRFSinglePleat_1:
                                   Control: Classic/Icon@2.5.0
@@ -11739,7 +12899,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varBRF_EdgeTear = 0, "", Text(varBRF_EdgeTear)))
+                                    Default: =If(varBRF_EdgeTear = 0, "", Text(varBRF_EdgeTear))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -11756,6 +12916,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_BRFEdgeTear:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varBRF_EdgeTear <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFEdgeTear.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_EdgeTear, Max(varBRF_EdgeTear - 1, 0)); Reset(txtBRFEdgeTear)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtBRFEdgeTear.Y
+                              - btnPlus_BRFEdgeTear:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFEdgeTear.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_EdgeTear, varBRF_EdgeTear + 1); Reset(txtBRFEdgeTear)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtBRFEdgeTear.X + txtBRFEdgeTear.Width + 6
+                                    Y: =txtBRFEdgeTear.Y
                               - lblPct_BRFEdgeTear:
                                   Control: Label@2.5.1
                                   Properties:
@@ -11765,7 +12983,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varBRF_EdgeTear / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_BRFEdgeTear.X + btnPlus_BRFEdgeTear.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_BRFEdgeTear_1:
                                   Control: Classic/Icon@2.5.0
@@ -12322,7 +13540,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varBRF_FactorySeal = 0, "", Text(varBRF_FactorySeal)))
+                                    Default: =If(varBRF_FactorySeal = 0, "", Text(varBRF_FactorySeal))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -12339,6 +13557,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_BRFFactorySeal:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varBRF_FactorySeal <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFFactorySeal.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_FactorySeal, Max(varBRF_FactorySeal - 1, 0)); Reset(txtBRFFactorySeal)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtBRFFactorySeal.Y
+                              - btnPlus_BRFFactorySeal:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFFactorySeal.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_FactorySeal, varBRF_FactorySeal + 1); Reset(txtBRFFactorySeal)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtBRFFactorySeal.X + txtBRFFactorySeal.Width + 6
+                                    Y: =txtBRFFactorySeal.Y
                               - lblPct_BRFFactorySeal:
                                   Control: Label@2.5.1
                                   Properties:
@@ -12348,7 +13624,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varBRF_FactorySeal / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_BRFFactorySeal.X + btnPlus_BRFFactorySeal.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_BRFFactorySeal_1:
                                   Control: Classic/Icon@2.5.0
@@ -12905,7 +14181,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varBRF_HealBreak = 0, "", Text(varBRF_HealBreak)))
+                                    Default: =If(varBRF_HealBreak = 0, "", Text(varBRF_HealBreak))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -12922,6 +14198,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_BRFHealBreak:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varBRF_HealBreak <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFHealBreak.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_HealBreak, Max(varBRF_HealBreak - 1, 0)); Reset(txtBRFHealBreak)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtBRFHealBreak.Y
+                              - btnPlus_BRFHealBreak:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFHealBreak.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_HealBreak, varBRF_HealBreak + 1); Reset(txtBRFHealBreak)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtBRFHealBreak.X + txtBRFHealBreak.Width + 6
+                                    Y: =txtBRFHealBreak.Y
                               - lblPct_BRFHealBreak:
                                   Control: Label@2.5.1
                                   Properties:
@@ -12931,7 +14265,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varBRF_HealBreak / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_BRFHealBreak.X + btnPlus_BRFHealBreak.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_BRFHealBreak_1:
                                   Control: Classic/Icon@2.5.0
@@ -13488,7 +14822,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(229, 229, 229, 1)
                                     BorderThickness: =1
-                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), If(varBRF_Other = 0, "", Text(varBRF_Other)))
+                                    Default: =If(varBRF_Other = 0, "", Text(varBRF_Other))
                                     DisplayMode: =Parent.DisplayMode
                                     Fill: =RGBA(248, 248, 248, 1)
                                     Font: =gFont
@@ -13505,6 +14839,64 @@ Screens:
                                     Width: =txtMFLowVac.Width
                                     X: =txtMFLowVac.X
                                     Y: =txtMFLowVac.Y
+                              - btnMinus_BRFOther:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =If(varBRF_Other <= 0, DisplayMode.Disabled, Parent.DisplayMode)
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFOther.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_Other, Max(varBRF_Other - 1, 0)); Reset(txtBRFOther)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="-"
+                                    Width: =40
+                                    X: =36
+                                    Y: =txtBRFOther.Y
+                              - btnPlus_BRFOther:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =cBlue
+                                    BorderThickness: =1
+                                    Color: =cBlue
+                                    DisabledBorderColor: =RGBA(214, 214, 214, 1)
+                                    DisabledColor: =RGBA(190, 190, 190, 1)
+                                    DisabledFill: =RGBA(248, 248, 248, 1)
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Font: =gFont
+                                    Height: =txtBRFOther.Height
+                                    HoverBorderColor: =cBlue
+                                    HoverColor: =cWhite
+                                    HoverFill: =cBlue
+                                    OnSelect: =Set(varBRF_Other, varBRF_Other + 1); Reset(txtBRFOther)
+                                    PressedBorderColor: =cBlue
+                                    PressedColor: =cWhite
+                                    PressedFill: =RGBA(0, 130, 180, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =20
+                                    Text: ="+"
+                                    Width: =40
+                                    X: =txtBRFOther.X + txtBRFOther.Width + 6
+                                    Y: =txtBRFOther.Y
                               - lblPct_BRFOther:
                                   Control: Label@2.5.1
                                   Properties:
@@ -13514,7 +14906,7 @@ Screens:
                                     Size: =12
                                     Text: =IfError(Text(varBRF_Other / varTotalPackages * 100, "[$-en-US]0.0") & "%", "")
                                     Width: =lblPct_MFLowVac.Width
-                                    X: =lblPct_MFLowVac.X
+                                    X: =btnPlus_BRFOther.X + btnPlus_BRFOther.Width + 6
                                     Y: =lblPct_MFLowVac.Y
                               - iconCam_BRFOther_1:
                                   Control: Classic/Icon@2.5.0

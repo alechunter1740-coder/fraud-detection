@@ -1,0 +1,266 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  scrHome:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
+    Children:
+      - ScreenContainer_Home:
+          Control: GroupContainer@1.5.0
+          Variant: AutoLayout
+          Properties:
+            Fill: =RGBA(245, 245, 245, 1)
+            Height: =Parent.Height
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutGap: =16
+            PaddingBottom: =16
+            PaddingLeft: =16
+            PaddingRight: =16
+            PaddingTop: =16
+            Width: =Parent.Width
+          Children:
+            - HeaderContainer_Home:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =cNavy
+                  FillPortions: =0
+                  Height: =imgAmcorLogo_Home.Height + Self.PaddingTop + Self.PaddingBottom
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutMinHeight: =16
+                  LayoutMinWidth: =16
+                  LayoutWrap: =true
+                  PaddingBottom: =8
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PaddingTop: =8
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                Children:
+                  - imgAmcorLogo_Home:
+                      Control: Image@2.2.3
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =2
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4
+                        Height: =40
+                        HoverBorderColor: =RGBA(0, 0, 0, 0)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        Image: =AmcorLogo_Transparent_Icon
+                        PressedBorderColor: =RGBA(0, 0, 0, 0)
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Width: =40
+                  - lblAppName_Home:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =cWhite
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledColor: =RGBA(161, 159, 157, 1)
+                        FillPortions: =1
+                        FocusedBorderThickness: =4
+                        Font: =gFont
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingLeft: =0
+                        Size: =If(Parent.Width < 320, 11, 14)
+                        Text: ="Calibrate Audit"
+                        Width: =134
+            - MainContainer_Home:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(255, 255, 255, 1)
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutGap: =32
+                  LayoutMinHeight: =16
+                  LayoutMinWidth: =16
+                  PaddingBottom: =32
+                  PaddingLeft: =32
+                  PaddingRight: =32
+                  PaddingTop: =32
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                Children:
+                  - lblWelcome:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =cText
+                        FillPortions: =1
+                        Font: =gFont
+                        FontWeight: =FontWeight.Semibold
+                        Size: =22
+                        Text: ="What would you like to do?"
+                        Width: =Parent.Width - 64
+                  - btnNewAudit_Home:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =0
+                        Color: =cWhite
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        Fill: =cGreen
+                        Font: =gFont
+                        Height: =80
+                        HoverBorderColor: =RGBA(0, 0, 0, 0)
+                        HoverColor: =cWhite
+                        HoverFill: =RGBA(0,128,64,1)
+                        OnSelect: |-
+                          =Set(varEditMode, false);
+                          Set(varSelectedAudit, Blank());
+                          Set(varHasResumeData, false);
+                          Set(varSelectedCustomer, Blank());
+                          Set(varSelectedLocation, Blank());
+                          Set(varAuditKey, "AUD-" & Text(Max(Calibrate_Audit_Data, ID) + 1, "00000"));
+                          ClearCollect(localAuditQueue, {
+                              Audit_Key: varAuditKey,
+                              Audit_Date: Today(),
+                              Customer: "", Customer_Nbr: "", Machine_Line_Number: "",
+                              Machine_Type: "", Machine_Serial_Number: "", Lot_Batch_Number: "",
+                              Box_Carton_Number: "", Roll_Number: "", Protein: "", Vendor: "",
+                              Cut: "", Bag: "", Product_Type: "",
+                              MS_Bag_Width: 0, MS_Bag_Length: 0, MS_Machine_Speed: 0,
+                              MS_Seal_Voltage: 0, MS_Seal_Amps: 0, MS_Seal_Dwell_Time: 0,
+                              MS_Seal_Pressure: 0, MS_Chamber_Torrs: 0, MS_Shrink_Tunnel_Temp: 0,
+                              MS_Settings_Comments: "", MS_General_Comments: "",
+                              MF_Low_Vacuum: 0, MF_Cold_Seal: 0, MF_Edge_Tear: 0,
+                              MF_Pull_Back: 0, MF_Burnt_Seals: 0, MF_Other_Count: 0,
+                              MF_Other_Explain: "", OF_Meat_In_Seals: 0, OF_Product_Related_Reject: 0,
+                              OF_Multiple_Pleat: 0, OF_Bag_Tear: 0, OF_Incomplete_Seal: 0,
+                              OF_Uncovered_Bone_Puncture: 0, OF_Pull_Back_Meat_DTS: 0,
+                              OF_Two_Per_Platen: 0, OF_Other_Count: 0, OF_Other_Explain: "",
+                              BRF_Hole_Before_Shrink: 0, BRF_Hole_After_Shrink: 0,
+                              BRF_Covered_Bone_Puncture: 0, BRF_Single_Pleat: 0, BRF_Edge_Tear: 0,
+                              BRF_Factory_Seal: 0, BRF_Heel_Break: 0, BRF_Other_Count: 0,
+                              BRF_Other_Explain: "", Total_Failures: 0, Total_Leakers: 0,
+                              Down_Time_During_Audit: "", Est_Down_Time_Savings: "",
+                              External_Findings_Changes: "", Internal_Comments: ""
+                          });
+                          Clear(colPhotos);
+                          Set(varPhotoSlots_MF_LowVac, 1);
+                          Set(varPhotoSlots_MF_ColdSeal, 1);
+                          Set(varPhotoSlots_MF_EdgeTear, 1);
+                          Set(varPhotoSlots_MF_PullBack, 1);
+                          Set(varPhotoSlots_MF_BurntSeals, 1);
+                          Set(varPhotoSlots_MF_Other, 1);
+                          Set(varPhotoSlots_OF_MeatInSeals, 1);
+                          Set(varPhotoSlots_OF_ProductRelatedReject, 1);
+                          Set(varPhotoSlots_OF_MultiplePleat, 1);
+                          Set(varPhotoSlots_OF_BagTear, 1);
+                          Set(varPhotoSlots_OF_IncompleteSeal, 1);
+                          Set(varPhotoSlots_OF_UncoveredBonePuncture, 1);
+                          Set(varPhotoSlots_OF_PullBackMeatDTS, 1);
+                          Set(varPhotoSlots_OF_TwoPerPlaten, 1);
+                          Set(varPhotoSlots_OF_Other, 1);
+                          Set(varPhotoSlots_BRF_HoleBeforeShrink, 1);
+                          Set(varPhotoSlots_BRF_HoleAfterShrink, 1);
+                          Set(varPhotoSlots_BRF_CoveredBonePuncture, 1);
+                          Set(varPhotoSlots_BRF_SinglePleat, 1);
+                          Set(varPhotoSlots_BRF_EdgeTear, 1);
+                          Set(varPhotoSlots_BRF_FactorySeal, 1);
+                          Set(varPhotoSlots_BRF_HeelBreak, 1);
+                          Set(varPhotoSlots_BRF_Other, 1);
+                          Set(varPhotoCount_MF_LowVac, 0);
+                          Set(varPhotoCount_MF_ColdSeal, 0);
+                          Set(varPhotoCount_MF_EdgeTear, 0);
+                          Set(varPhotoCount_MF_PullBack, 0);
+                          Set(varPhotoCount_MF_BurntSeals, 0);
+                          Set(varPhotoCount_MF_Other, 0);
+                          Set(varPhotoCount_OF_MeatInSeals, 0);
+                          Set(varPhotoCount_OF_ProductRelatedReject, 0);
+                          Set(varPhotoCount_OF_MultiplePleat, 0);
+                          Set(varPhotoCount_OF_BagTear, 0);
+                          Set(varPhotoCount_OF_IncompleteSeal, 0);
+                          Set(varPhotoCount_OF_UncoveredBonePuncture, 0);
+                          Set(varPhotoCount_OF_PullBackMeatDTS, 0);
+                          Set(varPhotoCount_OF_TwoPerPlaten, 0);
+                          Set(varPhotoCount_OF_Other, 0);
+                          Set(varPhotoCount_BRF_HoleBeforeShrink, 0);
+                          Set(varPhotoCount_BRF_HoleAfterShrink, 0);
+                          Set(varPhotoCount_BRF_CoveredBonePuncture, 0);
+                          Set(varPhotoCount_BRF_SinglePleat, 0);
+                          Set(varPhotoCount_BRF_EdgeTear, 0);
+                          Set(varPhotoCount_BRF_FactorySeal, 0);
+                          Set(varPhotoCount_BRF_HeelBreak, 0);
+                          Set(varPhotoCount_BRF_Other, 0);
+                          ResetForm(frmCustomerInfo);
+                          ResetForm(frmMachineSettings);
+                          Navigate(scrCustomer)
+                        PressedBorderColor: =RGBA(0, 0, 0, 0)
+                        PressedColor: =cWhite
+                        PressedFill: =RGBA(0,110,54,1)
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Size: =16
+                        Text: ="＋  New Audit"
+                        Width: =Parent.Width - 64
+                  - btnViewAudits_Home:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =cNavy
+                        Color: =cNavy
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        Fill: =cWhite
+                        Font: =gFont
+                        Height: =80
+                        HoverBorderColor: =cNavy
+                        HoverColor: =cWhite
+                        HoverFill: =cNavy
+                        OnSelect: =Navigate(scrLookup)
+                        PressedBorderColor: =cNavy
+                        PressedColor: =cWhite
+                        PressedFill: =RGBA(0,40,64,1)
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Size: =16
+                        Text: ="View / Edit Audits"
+                        Width: =Parent.Width - 64
+                  - btnCustomerReport_Home:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =cBlue
+                        Color: =cBlue
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        Fill: =cWhite
+                        Font: =gFont
+                        Height: =80
+                        HoverBorderColor: =cBlue
+                        HoverColor: =cWhite
+                        HoverFill: =cBlue
+                        OnSelect: =Navigate(scrCustomerReport)
+                        PressedBorderColor: =cBlue
+                        PressedColor: =cWhite
+                        PressedFill: =RGBA(0,110,160,1)
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Size: =16
+                        Text: ="Generate Customer Report"
+                        Width: =Parent.Width - 64

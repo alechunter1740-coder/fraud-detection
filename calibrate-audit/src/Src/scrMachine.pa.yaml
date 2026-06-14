@@ -1,0 +1,1675 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  scrMachine:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
+      OnVisible: |-
+        =If(
+            varEditMode,
+            Set(varChamberTorrsCount,
+                If(!IsBlank(varSelectedAudit.MS_Chamber_Torrs8) && varSelectedAudit.MS_Chamber_Torrs8 <> 0, 8,
+                If(!IsBlank(varSelectedAudit.MS_Chamber_Torrs7) && varSelectedAudit.MS_Chamber_Torrs7 <> 0, 7,
+                If(!IsBlank(varSelectedAudit.MS_Chamber_Torrs6) && varSelectedAudit.MS_Chamber_Torrs6 <> 0, 6,
+                If(!IsBlank(varSelectedAudit.MS_Chamber_Torrs5) && varSelectedAudit.MS_Chamber_Torrs5 <> 0, 5,
+                If(!IsBlank(varSelectedAudit.MS_Chamber_Torrs4) && varSelectedAudit.MS_Chamber_Torrs4 <> 0, 4,
+                If(!IsBlank(varSelectedAudit.MS_Chamber_Torrs3) && varSelectedAudit.MS_Chamber_Torrs3 <> 0, 3,
+                If(!IsBlank(varSelectedAudit.MS_Chamber_Torrs2) && varSelectedAudit.MS_Chamber_Torrs2 <> 0, 2,
+                1)))))))
+            ),
+            Set(varChamberTorrsCount, 1)
+        )
+    Children:
+      - ScreenContainer_Machine:
+          Control: GroupContainer@1.5.0
+          Variant: AutoLayout
+          Properties:
+            Fill: =RGBA(245, 245, 245, 1)
+            Height: =Parent.Height
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutGap: =16
+            PaddingBottom: =16
+            PaddingLeft: =16
+            PaddingRight: =16
+            PaddingTop: =16
+            Width: =Parent.Width
+          Children:
+            - HeaderContainer_Machine:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =cNavy
+                  FillPortions: =0
+                  Height: =imgAmcorLogo_Machine.Height + Self.PaddingTop + Self.PaddingBottom
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutMinHeight: =16
+                  LayoutMinWidth: =16
+                  PaddingBottom: =8
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PaddingTop: =8
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                Children:
+                  - imgAmcorLogo_Machine:
+                      Control: Image@2.2.3
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =2
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4
+                        Height: =40
+                        HoverBorderColor: =RGBA(0, 0, 0, 0)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        Image: =AmcorLogo_Transparent_Icon
+                        PressedBorderColor: =RGBA(0, 0, 0, 0)
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Width: =40
+                  - lblAppName_Machine:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =cWhite
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        FillPortions: =1
+                        Font: =gFont
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingLeft: =0
+                        Size: =If(Parent.Width < 320, 11, 14)
+                        Text: ="Calibrate Audit"
+                        Width: =134
+                  - btnSaveIcon_Machine:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        Color: =If(Connection.Connected, cWhite, RGBA(255, 200, 80, 1))
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledColor: =RGBA(255, 255, 255, 0.3)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4
+                        Height: =32
+                        HoverBorderColor: =RGBA(0, 0, 0, 0)
+                        HoverColor: =RGBA(255, 255, 255, 0.75)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        Icon: =Icon.Save
+                        LayoutMinHeight: =16
+                        LayoutMinWidth: =16
+                        OnSelect: |-
+                          =If(
+                              Connection.Connected,
+                              Set(varAuditSPID,
+                                  With({_byId: LookUp(Calibrate_Audit_Data, ID = varAuditSPID)},
+                                  With({_row: If(!IsBlank(_byId), _byId, LookUp(Calibrate_Audit_Data, Title = varAuditKey))},
+                                  Patch(Calibrate_Audit_Data,
+                                      If(IsBlank(_row), Defaults(Calibrate_Audit_Data), _row),
+                                  {
+                                      Title: varAuditKey,
+                                      MS_Machine_Speed:       If(IsBlank(txtMachineSpeed.Text) || txtMachineSpeed.Text = "", 0, Value(txtMachineSpeed.Text)),
+                                      MS_Seal_Voltage:        If(IsBlank(txtSealVoltage.Text) || txtSealVoltage.Text = "", 0, Value(txtSealVoltage.Text)),
+                                      MS_Seal_Amps:           If(IsBlank(txtSealAmps.Text) || txtSealAmps.Text = "", 0, Value(txtSealAmps.Text)),
+                                      MS_Seal_Dwell_Time:     If(IsBlank(txtSealDwellTime.Text) || txtSealDwellTime.Text = "", 0, Value(txtSealDwellTime.Text)),
+                                      MS_Seal_Pressure:       If(IsBlank(txtSealPressure.Text) || txtSealPressure.Text = "", 0, Value(txtSealPressure.Text)),
+                                      MS_Chamber_Torrs:       If(IsBlank(txtChamberTorrs1.Text) || txtChamberTorrs1.Text = "", 0, Value(txtChamberTorrs1.Text)),
+                                      MS_Chamber_Torrs2:      If(varChamberTorrsCount >= 2, If(IsBlank(txtChamberTorrs2.Text) || txtChamberTorrs2.Text = "", 0, Value(txtChamberTorrs2.Text)), 0),
+                                      MS_Chamber_Torrs3:      If(varChamberTorrsCount >= 3, If(IsBlank(txtChamberTorrs3.Text) || txtChamberTorrs3.Text = "", 0, Value(txtChamberTorrs3.Text)), 0),
+                                      MS_Chamber_Torrs4:      If(varChamberTorrsCount >= 4, If(IsBlank(txtChamberTorrs4.Text) || txtChamberTorrs4.Text = "", 0, Value(txtChamberTorrs4.Text)), 0),
+                                      MS_Chamber_Torrs5:      If(varChamberTorrsCount >= 5, If(IsBlank(txtChamberTorrs5.Text) || txtChamberTorrs5.Text = "", 0, Value(txtChamberTorrs5.Text)), 0),
+                                      MS_Chamber_Torrs6:      If(varChamberTorrsCount >= 6, If(IsBlank(txtChamberTorrs6.Text) || txtChamberTorrs6.Text = "", 0, Value(txtChamberTorrs6.Text)), 0),
+                                      MS_Chamber_Torrs7:      If(varChamberTorrsCount >= 7, If(IsBlank(txtChamberTorrs7.Text) || txtChamberTorrs7.Text = "", 0, Value(txtChamberTorrs7.Text)), 0),
+                                      MS_Chamber_Torrs8:      If(varChamberTorrsCount >= 8, If(IsBlank(txtChamberTorrs8.Text) || txtChamberTorrs8.Text = "", 0, Value(txtChamberTorrs8.Text)), 0),
+                                      MS_Shrink_Tunnel_Temp:  If(IsBlank(txtShrinkTunnelTemp.Text) || txtShrinkTunnelTemp.Text = "", 0, Value(txtShrinkTunnelTemp.Text)),
+                                      MS_Settings_Comments:   txtSettingsComments.Text,
+                                      MS_General_Comments:    txtGeneralComments.Text
+                                  }
+                                  )
+                                  )
+                                  ).ID
+                                  );
+                              Notify("Saved to list.", NotificationType.Success),
+                              ClearCollect(colMachineRecordCache, {
+                                  MS_Machine_Speed:       If(IsBlank(txtMachineSpeed.Text) || txtMachineSpeed.Text = "", 0, Value(txtMachineSpeed.Text)),
+                                  MS_Seal_Voltage:        If(IsBlank(txtSealVoltage.Text) || txtSealVoltage.Text = "", 0, Value(txtSealVoltage.Text)),
+                                  MS_Seal_Amps:           If(IsBlank(txtSealAmps.Text) || txtSealAmps.Text = "", 0, Value(txtSealAmps.Text)),
+                                  MS_Seal_Dwell_Time:     If(IsBlank(txtSealDwellTime.Text) || txtSealDwellTime.Text = "", 0, Value(txtSealDwellTime.Text)),
+                                  MS_Seal_Pressure:       If(IsBlank(txtSealPressure.Text) || txtSealPressure.Text = "", 0, Value(txtSealPressure.Text)),
+                                  MS_Chamber_Torrs:       If(IsBlank(txtChamberTorrs1.Text) || txtChamberTorrs1.Text = "", 0, Value(txtChamberTorrs1.Text)),
+                                  MS_Chamber_Torrs2:      If(varChamberTorrsCount >= 2, If(IsBlank(txtChamberTorrs2.Text) || txtChamberTorrs2.Text = "", 0, Value(txtChamberTorrs2.Text)), 0),
+                                  MS_Chamber_Torrs3:      If(varChamberTorrsCount >= 3, If(IsBlank(txtChamberTorrs3.Text) || txtChamberTorrs3.Text = "", 0, Value(txtChamberTorrs3.Text)), 0),
+                                  MS_Chamber_Torrs4:      If(varChamberTorrsCount >= 4, If(IsBlank(txtChamberTorrs4.Text) || txtChamberTorrs4.Text = "", 0, Value(txtChamberTorrs4.Text)), 0),
+                                  MS_Chamber_Torrs5:      If(varChamberTorrsCount >= 5, If(IsBlank(txtChamberTorrs5.Text) || txtChamberTorrs5.Text = "", 0, Value(txtChamberTorrs5.Text)), 0),
+                                  MS_Chamber_Torrs6:      If(varChamberTorrsCount >= 6, If(IsBlank(txtChamberTorrs6.Text) || txtChamberTorrs6.Text = "", 0, Value(txtChamberTorrs6.Text)), 0),
+                                  MS_Chamber_Torrs7:      If(varChamberTorrsCount >= 7, If(IsBlank(txtChamberTorrs7.Text) || txtChamberTorrs7.Text = "", 0, Value(txtChamberTorrs7.Text)), 0),
+                                  MS_Chamber_Torrs8:      If(varChamberTorrsCount >= 8, If(IsBlank(txtChamberTorrs8.Text) || txtChamberTorrs8.Text = "", 0, Value(txtChamberTorrs8.Text)), 0),
+                                  MS_Shrink_Tunnel_Temp:  If(IsBlank(txtShrinkTunnelTemp.Text) || txtShrinkTunnelTemp.Text = "", 0, Value(txtShrinkTunnelTemp.Text)),
+                                  MS_Settings_Comments:   txtSettingsComments.Text,
+                                  MS_General_Comments:    txtGeneralComments.Text
+                              });
+                              SaveData(colMachineRecordCache, "MachineRecordCache");
+                              Notify("No connection — saved locally. Will sync when back online.", NotificationType.Warning)
+                          )
+                        PressedBorderColor: =RGBA(0, 0, 0, 0)
+                        PressedColor: =RGBA(255, 255, 255, 0.5)
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Tooltip: =If(Connection.Connected, "Save to list", "Save offline")
+                        Width: =32
+                  - rectBtnDivider_Machine:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        Fill: =RGBA(0, 0, 0, 0)
+                        Height: =44
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        LayoutMinHeight: =16
+                        LayoutMinWidth: =16
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Width: =16
+                  - btnHome_Machine:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        Color: =cWhite
+                        DisabledBorderColor: =RGBA(245, 245, 245, 1)
+                        DisabledColor: =RGBA(225, 223, 221, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4
+                        Height: =32
+                        HoverBorderColor: =RGBA(0, 0, 0, 0)
+                        HoverColor: =RGBA(255, 255, 255, 0.75)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        Icon: =Icon.Home
+                        LayoutMinHeight: =16
+                        LayoutMinWidth: =16
+                        OnSelect: =Navigate(scrHome)
+                        PressedBorderColor: =RGBA(0, 0, 0, 0)
+                        PressedColor: =RGBA(255, 255, 255, 0.5)
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Width: =32
+            - SubHeaderContainer_Machine:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  DropShadow: =DropShadow.None
+                  Fill: =RGBA(245, 245, 245, 1)
+                  FillPortions: =0
+                  Height: =26
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutMinHeight: =44
+                  LayoutMinWidth: =16
+                  PaddingBottom: =8
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PaddingTop: =8
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                Children:
+                  - lblSubHeader_Machine:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: =""
+                        BorderThickness: =0
+                        Fill: =RGBA(0,0,0,0)
+                        FillPortions: =1
+                        Font: =gFont
+                        FontColor: =cText
+                        Height: =28
+                        Size: =20
+                        Text: ="Machine Settings"
+                        VerticalAlign: ="Middle"
+                        Weight: ="Semibold"
+                        Width: =Parent.Width - 16
+            - MainContainer_Machine:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(255, 255, 255, 1)
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutMinHeight: =16
+                  LayoutMinWidth: =16
+                  PaddingBottom: =8
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PaddingTop: =8
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                Children:
+                  - frmMachineSettings:
+                      Control: Form@2.4.4
+                      Layout: Vertical
+                      Properties:
+                        BorderColor: =RGBA(245, 245, 245, 1)
+                        DataSource: =Calibrate_Audit_Data
+                        DefaultMode: =If(varEditMode, FormMode.Edit, FormMode.New)
+                        Item: =If(varEditMode, varSelectedAudit, Blank())
+                        LayoutMinHeight: =16
+                        LayoutMinWidth: =Parent.Width
+                      Children:
+                        - crdMachineSettingsHeader:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Title"
+                              Default: =ThisItem.Title
+                              DisplayName: =""
+                              Height: =41
+                              MaxLength: =DataSourceInfo(%DATACARD_DATASOURCE_NAME.ID%, %DataSourceInfo.RESERVED%.MaxLength, '%DATACARD_FIELD_NAME.ID%')
+                              Required: =false
+                              Update: =""
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                            Children:
+                              - rectMachineSettingsHeaderBg:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    Fill: =RGBA(250, 250, 250, 1)
+                                    Height: =40
+                                    Width: =Parent.Width
+                              - rectMachineSettingsHeaderBorder:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    Fill: =RGBA(0, 57, 90, 1)
+                                    Height: =2
+                                    Width: =Parent.Width
+                                    Y: =39
+                              - lblMachineSettingsHeaderText:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(0, 57, 90, 1)
+                                    Font: =gFont
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =39
+                                    PaddingLeft: =16
+                                    Size: =14
+                                    Text: ="MACHINE SETTINGS"
+                                    Width: =Parent.Width
+                        - crdMachineType:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Machine_Type"
+                              Default: =ThisItem.Machine_Type
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Machine_Type)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Machine_Type)
+                              Required: =false
+                              Update: =If(cmbMachineType.Selected.Value = "-- Other --", txtMachineTypeOther.Text, cmbMachineType.Selected.Value)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =1
+                            Children:
+                              - lblMachineType:
+                                  Control: ModernText@1.0.0
+                                  Properties:
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =23
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =16
+                                    Text: ="Machine Type"
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - cmbMachineType:
+                                  Control: ModernCombobox@1.1.0
+                                  Properties:
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode,
+                                          Filter(["Rotary","Linear","-- Other --"], Value = varSelectedAudit.Machine_Type),
+                                          Filter(["Rotary","Linear","-- Other --"], Value = "Rotary")
+                                      )
+                                    InputTextPlaceholder: ="Select machine type..."
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: =["Rotary","Linear","-- Other --"]
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblMachineType.Y + lblMachineType.Height + 4
+                              - txtMachineTypeOther:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: ="Other Machine Type"
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter machine type..."
+                                    Size: =18
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: ="None"
+                                    Visible: =cmbMachineType.Selected.Value = "-- Other --"
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =cmbMachineType.Y + cmbMachineType.Height + 4
+                        - crdMachineModel:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Machine_Model"
+                              Default: =ThisItem.Machine_Model
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Machine_Model)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Machine_Model)
+                              Required: =false
+                              Update: =If(cmbMachineModel.Selected.Value = "-- New --", txtMachineModelNew.Text, cmbMachineModel.Selected.Value)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =1
+                            Children:
+                              - lblMachineModel:
+                                  Control: ModernText@1.0.0
+                                  Properties:
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =23
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =16
+                                    Text: ="Machine Model"
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtMachineModelNew:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: ="New Machine Model"
+                                    Default: |-
+                                      =If(
+                                          varEditMode,
+                                          If(IsBlank(LookUp(Distinct(Filter(Calibrate_Audit_Data, Customer = varSelectedCustomer.customer_name && Machine_Type = cmbMachineType.Selected.Value), Machine_Model), Value = varSelectedAudit.Machine_Model)), varSelectedAudit.Machine_Model, ""),
+                                          ""
+                                      )
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter new model name..."
+                                    Size: =18
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: ="None"
+                                    Visible: =cmbMachineModel.Selected.Value = "-- New --"
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =cmbMachineModel.Y + cmbMachineModel.Height + 4
+                              - cmbMachineModel:
+                                  Control: Classic/ComboBox@2.4.0
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    ChevronBackground: =RGBA(248, 248, 248, 1)
+                                    ChevronFill: =cText2
+                                    ChevronHoverBackground: =RGBA(240, 240, 240, 1)
+                                    ChevronHoverFill: =cText
+                                    Color: =cText
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode,
+                                          Filter(
+                                              Distinct(
+                                                  Filter(
+                                                      Calibrate_Audit_Data,
+                                                      Customer = varSelectedCustomer.customer_name && Machine_Type = cmbMachineType.Selected.Value
+                                                  ),
+                                                  Machine_Model
+                                              ),
+                                              Value = varSelectedAudit.Machine_Model
+                                          ),
+                                          Blank()
+                                      )
+                                    DisplayFields: =["Value"]
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Height: =cmbMachineType.Height
+                                    HoverBorderColor: =RGBA(204, 204, 204, 1)
+                                    HoverColor: =cText
+                                    HoverFill: =RGBA(240, 240, 240, 1)
+                                    InputTextPlaceholder: ="Select or add model..."
+                                    Items: |-
+                                      =Table(
+                                          {Value: "-- New --"},
+                                          {Value: "8600-14"},
+                                          {Value: "8600-14 CS"},
+                                          {Value: "8600-14 E"},
+                                          {Value: "8600 EL"},
+                                          {Value: "8600 B-16 CS"},
+                                          {Value: "8600 B-16 EL"},
+                                          {Value: "8620-16"},
+                                          {Value: "8610-14"},
+                                          {Value: "8600-16 EL"},
+                                          {Value: "8600 B-18"},
+                                          {Value: "8300-24"},
+                                          {Value: "MV16"},
+                                          {Value: "MV18"},
+                                          {Value: "MV20"},
+                                          {Value: "MV24"},
+                                          {Value: "MV18Y"},
+                                          {Value: "MV18S"}
+                                      )
+                                    PressedBorderColor: =RGBA(128, 128, 128, 1)
+                                    PressedColor: =cText
+                                    PressedFill: =RGBA(232, 232, 232, 1)
+                                    SearchFields: =["Value"]
+                                    SelectMultiple: =false
+                                    SelectionColor: =cWhite
+                                    SelectionFill: =cNavy
+                                    Size: =16
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblMachineModel.Y + lblMachineModel.Height + 4
+                        - crdMachineSpeed:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Machine_Speed"
+                              Default: =ThisItem.MS_Machine_Speed
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,MS_Machine_Speed)
+                              Required: =false
+                              Update: =If(IsBlank(txtMachineSpeed.Text) || txtMachineSpeed.Text = "", 0, Value(txtMachineSpeed.Text))
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =2
+                            Children:
+                              - lblMachineSpeed:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Machine Speed"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtMachineSpeed:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblMachineSpeed.Y + lblMachineSpeed.Height + 4
+                        - crdSealVoltage:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Seal_Voltage"
+                              Default: =ThisItem.MS_Seal_Voltage
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,MS_Seal_Voltage)
+                              Required: =false
+                              Update: =If(IsBlank(txtSealVoltage.Text) || txtSealVoltage.Text = "", 0, Value(txtSealVoltage.Text))
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =2
+                            Children:
+                              - lblSealVoltage:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Seal Voltage"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtSealVoltage:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblSealVoltage.Y + lblSealVoltage.Height + 4
+                        - crdSealAmps:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Seal_Amps"
+                              Default: =ThisItem.MS_Seal_Amps
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,MS_Seal_Amps)
+                              Required: =false
+                              Update: =If(IsBlank(txtSealAmps.Text) || txtSealAmps.Text = "", 0, Value(txtSealAmps.Text))
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =3
+                            Children:
+                              - lblSealAmps:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Seal Amps"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtSealAmps:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblSealAmps.Y + lblSealAmps.Height + 4
+                        - crdSealDwellTime:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Seal_Dwell_Time"
+                              Default: =ThisItem.MS_Seal_Dwell_Time
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,MS_Seal_Dwell_Time)
+                              Required: =false
+                              Update: =If(IsBlank(txtSealDwellTime.Text) || txtSealDwellTime.Text = "", 0, Value(txtSealDwellTime.Text))
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =3
+                            Children:
+                              - lblSealDwellTime:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Seal Dwell Time"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtSealDwellTime:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblSealDwellTime.Y + lblSealDwellTime.Height + 4
+                        - crdSealPressure:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Seal_Pressure"
+                              Default: =ThisItem.MS_Seal_Pressure
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,MS_Seal_Pressure)
+                              Required: =false
+                              Update: =If(IsBlank(txtSealPressure.Text) || txtSealPressure.Text = "", 0, Value(txtSealPressure.Text))
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =4
+                            Children:
+                              - lblSealPressure:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Seal Pressure"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtSealPressure:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblSealPressure.Y + lblSealPressure.Height + 4
+                        - crdShrinkTunnelTemp:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Shrink_Tunnel_Temp"
+                              Default: =ThisItem.MS_Shrink_Tunnel_Temp
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,MS_Shrink_Tunnel_Temp)
+                              Height: =85
+                              Required: =false
+                              Update: =If(IsBlank(txtShrinkTunnelTemp.Text) || txtShrinkTunnelTemp.Text = "", 0, Value(txtShrinkTunnelTemp.Text))
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =4
+                            Children:
+                              - lblShrinkTunnelTemp:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Shrink Tunnel Temp"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtShrinkTunnelTemp:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblShrinkTunnelTemp.Y + lblShrinkTunnelTemp.Height + 4
+                        - crdChamberTorrsHeader:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualView
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="{Identifier}"
+                              Default: =""
+                              DisplayName: =""
+                              Height: =41
+                              Required: =false
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =5
+                            Children:
+                              - rectChamberTorrsHeaderBg:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    Fill: =RGBA(250, 250, 250, 1)
+                                    Height: =40
+                                    Width: =Parent.Width
+                              - rectChamberTorrsHeaderBorder:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    Fill: =RGBA(0, 57, 90, 1)
+                                    Height: =2
+                                    Width: =Parent.Width
+                                    Y: =39
+                              - lblChamberTorrsHeaderText:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(0, 57, 90, 1)
+                                    Font: =gFont
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =39
+                                    PaddingLeft: =16
+                                    Size: =14
+                                    Text: ="CHAMBER TORRS"
+                                    Width: =Parent.Width
+                        - crdChamberTorrs1:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Chamber_Torrs"
+                              Default: =ThisItem.MS_Chamber_Torrs
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,MS_Chamber_Torrs)
+                              Required: =false
+                              Update: =If(IsBlank(txtChamberTorrs1.Text) || txtChamberTorrs1.Text = "", 0, Value(txtChamberTorrs1.Text))
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =6
+                            Children:
+                              - lblChamberTorrs1:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Chamber 1"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtChamberTorrs1:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblChamberTorrs1.Y + lblChamberTorrs1.Height + 4
+                              - btnAddChamber:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =cWhite
+                                    Fill: =cNavy
+                                    Font: =gFont
+                                    Height: =44
+                                    HoverFill: =RGBA(0,60,90,1)
+                                    OnSelect: =If(varChamberTorrsCount < 8, Set(varChamberTorrsCount, varChamberTorrsCount + 1))
+                                    PressedFill: =RGBA(0,45,70,1)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Size: =14
+                                    Text: ="+ Add Chamber"
+                                    Visible: =varChamberTorrsCount < 8
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =txtChamberTorrs1.Y + txtChamberTorrs1.Height + 8
+                        - crdChamberTorrs2:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Chamber_Torrs2"
+                              Default: =ThisItem.MS_Chamber_Torrs2
+                              DisplayName: ="Chamber 2"
+                              Required: =false
+                              Update: =If(IsBlank(txtChamberTorrs2.Text) || txtChamberTorrs2.Text = "", 0, Value(txtChamberTorrs2.Text))
+                              Visible: =varChamberTorrsCount >= 2 || (varEditMode && !IsBlank(varSelectedAudit.MS_Chamber_Torrs2) && varSelectedAudit.MS_Chamber_Torrs2 <> 0)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =6
+                            Children:
+                              - lblChamberTorrs2:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Chamber 2"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtChamberTorrs2:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblChamberTorrs2.Y + lblChamberTorrs2.Height + 4
+                              - btnRemoveChamber2:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =cWhite
+                                    Fill: =cSand
+                                    Font: =gFont
+                                    Height: =44
+                                    HoverFill: =RGBA(140,133,126,1)
+                                    OnSelect: =If(varChamberTorrsCount = 2, Set(varChamberTorrsCount, 1))
+                                    PressedFill: =RGBA(120,114,108,1)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Size: =14
+                                    Text: ="- Remove"
+                                    Visible: =varChamberTorrsCount = 2
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =txtChamberTorrs2.Y + txtChamberTorrs2.Height + 8
+                        - crdChamberTorrs3:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Chamber_Torrs3"
+                              Default: =ThisItem.MS_Chamber_Torrs3
+                              DisplayName: ="Chamber 3"
+                              Required: =false
+                              Update: =If(IsBlank(txtChamberTorrs3.Text) || txtChamberTorrs3.Text = "", 0, Value(txtChamberTorrs3.Text))
+                              Visible: =varChamberTorrsCount >= 3 || (varEditMode && !IsBlank(varSelectedAudit.MS_Chamber_Torrs3) && varSelectedAudit.MS_Chamber_Torrs3 <> 0)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =7
+                            Children:
+                              - lblChamberTorrs3:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Chamber 3"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtChamberTorrs3:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblChamberTorrs3.Y + lblChamberTorrs3.Height + 4
+                              - btnRemoveChamber3:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =cWhite
+                                    Fill: =cSand
+                                    Font: =gFont
+                                    Height: =44
+                                    HoverFill: =RGBA(140,133,126,1)
+                                    OnSelect: =If(varChamberTorrsCount = 3, Set(varChamberTorrsCount, 2))
+                                    PressedFill: =RGBA(120,114,108,1)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Size: =14
+                                    Text: ="- Remove"
+                                    Visible: =varChamberTorrsCount = 3
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =txtChamberTorrs3.Y + txtChamberTorrs3.Height + 8
+                        - crdChamberTorrs4:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Chamber_Torrs4"
+                              Default: =ThisItem.MS_Chamber_Torrs4
+                              DisplayName: ="Chamber 4"
+                              Required: =false
+                              Update: =If(IsBlank(txtChamberTorrs4.Text) || txtChamberTorrs4.Text = "", 0, Value(txtChamberTorrs4.Text))
+                              Visible: =varChamberTorrsCount >= 4 || (varEditMode && !IsBlank(varSelectedAudit.MS_Chamber_Torrs4) && varSelectedAudit.MS_Chamber_Torrs4 <> 0)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =7
+                            Children:
+                              - lblChamberTorrs4:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Chamber 4"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtChamberTorrs4:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblChamberTorrs4.Y + lblChamberTorrs4.Height + 4
+                              - btnRemoveChamber4:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =cWhite
+                                    Fill: =cSand
+                                    Font: =gFont
+                                    Height: =44
+                                    HoverFill: =RGBA(140,133,126,1)
+                                    OnSelect: =If(varChamberTorrsCount = 4, Set(varChamberTorrsCount, 3))
+                                    PressedFill: =RGBA(120,114,108,1)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Size: =14
+                                    Text: ="- Remove"
+                                    Visible: =varChamberTorrsCount = 4
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =txtChamberTorrs4.Y + txtChamberTorrs4.Height + 8
+                        - crdChamberTorrs5:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Chamber_Torrs5"
+                              Default: =ThisItem.MS_Chamber_Torrs5
+                              DisplayName: ="Chamber 5"
+                              Required: =false
+                              Update: =If(IsBlank(txtChamberTorrs5.Text) || txtChamberTorrs5.Text = "", 0, Value(txtChamberTorrs5.Text))
+                              Visible: =varChamberTorrsCount >= 5 || (varEditMode && !IsBlank(varSelectedAudit.MS_Chamber_Torrs5) && varSelectedAudit.MS_Chamber_Torrs5 <> 0)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =8
+                            Children:
+                              - lblChamberTorrs5:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Chamber 5"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtChamberTorrs5:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblChamberTorrs5.Y + lblChamberTorrs5.Height + 4
+                              - btnRemoveChamber5:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =cWhite
+                                    Fill: =cSand
+                                    Font: =gFont
+                                    Height: =44
+                                    HoverFill: =RGBA(140,133,126,1)
+                                    OnSelect: =If(varChamberTorrsCount = 5, Set(varChamberTorrsCount, 4))
+                                    PressedFill: =RGBA(120,114,108,1)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Size: =14
+                                    Text: ="- Remove"
+                                    Visible: =varChamberTorrsCount = 5
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =txtChamberTorrs5.Y + txtChamberTorrs5.Height + 8
+                        - crdChamberTorrs6:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Chamber_Torrs6"
+                              Default: =ThisItem.MS_Chamber_Torrs6
+                              DisplayName: ="Chamber 6"
+                              Required: =false
+                              Update: =If(IsBlank(txtChamberTorrs6.Text) || txtChamberTorrs6.Text = "", 0, Value(txtChamberTorrs6.Text))
+                              Visible: =varChamberTorrsCount >= 6 || (varEditMode && !IsBlank(varSelectedAudit.MS_Chamber_Torrs6) && varSelectedAudit.MS_Chamber_Torrs6 <> 0)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =8
+                            Children:
+                              - lblChamberTorrs6:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Chamber 6"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtChamberTorrs6:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblChamberTorrs6.Y + lblChamberTorrs6.Height + 4
+                              - btnRemoveChamber6:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =cWhite
+                                    Fill: =cSand
+                                    Font: =gFont
+                                    Height: =44
+                                    HoverFill: =RGBA(140,133,126,1)
+                                    OnSelect: =If(varChamberTorrsCount = 6, Set(varChamberTorrsCount, 5))
+                                    PressedFill: =RGBA(120,114,108,1)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Size: =14
+                                    Text: ="- Remove"
+                                    Visible: =varChamberTorrsCount = 6
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =txtChamberTorrs6.Y + txtChamberTorrs6.Height + 8
+                        - crdChamberTorrs7:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Chamber_Torrs7"
+                              Default: =ThisItem.MS_Chamber_Torrs7
+                              DisplayName: ="Chamber 7"
+                              Required: =false
+                              Update: =If(IsBlank(txtChamberTorrs7.Text) || txtChamberTorrs7.Text = "", 0, Value(txtChamberTorrs7.Text))
+                              Visible: =varChamberTorrsCount >= 7 || (varEditMode && !IsBlank(varSelectedAudit.MS_Chamber_Torrs7) && varSelectedAudit.MS_Chamber_Torrs7 <> 0)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =9
+                            Children:
+                              - lblChamberTorrs7:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Chamber 7"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtChamberTorrs7:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0 "
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblChamberTorrs7.Y + lblChamberTorrs7.Height + 4
+                              - btnRemoveChamber7:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =cWhite
+                                    Fill: =cSand
+                                    Font: =gFont
+                                    Height: =44
+                                    HoverFill: =RGBA(140,133,126,1)
+                                    OnSelect: =If(varChamberTorrsCount = 7, Set(varChamberTorrsCount, 6))
+                                    PressedFill: =RGBA(120,114,108,1)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Size: =14
+                                    Text: ="- Remove"
+                                    Visible: =varChamberTorrsCount = 7
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =txtChamberTorrs7.Y + txtChamberTorrs7.Height + 8
+                        - crdChamberTorrs8:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Chamber_Torrs8"
+                              Default: =ThisItem.MS_Chamber_Torrs8
+                              DisplayName: ="Chamber 8"
+                              Required: =false
+                              Update: =If(IsBlank(txtChamberTorrs8.Text) || txtChamberTorrs8.Text = "", 0, Value(txtChamberTorrs8.Text))
+                              Visible: =varChamberTorrsCount >= 8 || (varEditMode && !IsBlank(varSelectedAudit.MS_Chamber_Torrs8) && varSelectedAudit.MS_Chamber_Torrs8 <> 0)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =9
+                            Children:
+                              - lblChamberTorrs8:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Chamber 8"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtChamberTorrs8:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblChamberTorrs8.Y + lblChamberTorrs8.Height + 4
+                              - btnRemoveChamber8:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =cWhite
+                                    Fill: =cSand
+                                    Font: =gFont
+                                    Height: =44
+                                    HoverFill: =RGBA(140,133,126,1)
+                                    OnSelect: =Set(varChamberTorrsCount, 7)
+                                    PressedFill: =RGBA(120,114,108,1)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Size: =14
+                                    Text: ="- Remove"
+                                    Visible: =varChamberTorrsCount = 8
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =txtChamberTorrs8.Y + txtChamberTorrs8.Height + 8
+                        - crdCommentsHeader:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualView
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="{Identifier}"
+                              Default: =""
+                              DisplayName: =""
+                              Height: =41
+                              Required: =false
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =10
+                            Children:
+                              - rectCommentsHeaderBg:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    Fill: =RGBA(250, 250, 250, 1)
+                                    Height: =40
+                                    Width: =Parent.Width
+                              - rectCommentsHeaderBorder:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    Fill: =RGBA(0, 57, 90, 1)
+                                    Height: =2
+                                    Width: =Parent.Width
+                                    Y: =39
+                              - lblCommentsHeaderText:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(0, 57, 90, 1)
+                                    Font: =gFont
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =39
+                                    PaddingLeft: =16
+                                    Size: =14
+                                    Text: ="COMMENTS"
+                                    Width: =Parent.Width
+                        - crdSettingsComments:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Settings_Comments"
+                              Default: =ThisItem.MS_Settings_Comments
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,MS_Settings_Comments)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, MS_Settings_Comments)
+                              Required: =false
+                              Update: =txtSettingsComments.Text
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =11
+                            Children:
+                              - lblSettingsComments:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Settings Comments"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtSettingsComments:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: =Parent.DisplayName
+                                    Default: =If(varEditMode, varSelectedAudit.MS_Settings_Comments, "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    Height: =80
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter settings comments..."
+                                    Size: =18
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    Type: =TextInputType.Multiline
+                                    ValidationState: ="None"
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblSettingsComments.Y + lblSettingsComments.Height + 4
+                        - crdGeneralComments:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_General_Comments"
+                              Default: =ThisItem.MS_General_Comments
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,MS_General_Comments)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, MS_General_Comments)
+                              Required: =false
+                              Update: =txtGeneralComments.Text
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =12
+                            Children:
+                              - lblGeneralComments:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="General Comments"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtGeneralComments:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: =Parent.DisplayName
+                                    Default: =If(varEditMode, varSelectedAudit.MS_General_Comments, "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    Height: =80
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter general comments..."
+                                    Size: =18
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    Type: =TextInputType.Multiline
+                                    ValidationState: ="None"
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblGeneralComments.Y + lblGeneralComments.Height + 4
+            - FooterContainer_Machine:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(245, 245, 245, 1)
+                  FillPortions: =0
+                  Height: =60
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutGap: =8
+                  LayoutMinHeight: =44
+                  LayoutMinWidth: =16
+                  PaddingBottom: =8
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PaddingTop: =8
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                Children:
+                  - btnBack_Machine:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =cNavy
+                        BorderThickness: =1
+                        Color: =cNavy
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledColor: =RGBA(161, 159, 157, 1)
+                        DisabledFill: =RGBA(242, 242, 241, 0)
+                        Fill: =cWhite
+                        Font: =gFont
+                        Height: =44
+                        HoverBorderColor: =cNavy
+                        HoverColor: =cWhite
+                        HoverFill: =cNavy
+                        OnSelect: =Navigate(scrCustomer)
+                        PressedBorderColor: =cNavy
+                        PressedColor: =cWhite
+                        PressedFill: =RGBA(0, 40, 70, 1)
+                        RadiusBottomLeft: =4
+                        RadiusBottomRight: =4
+                        RadiusTopLeft: =4
+                        RadiusTopRight: =4
+                        Size: =14
+                        Text: ="Back"
+                        Width: =(Parent.Width - 32) / 3
+                  - btnClearAll_Machine:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =cRed
+                        BorderThickness: =1
+                        Color: =cRed
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledColor: =RGBA(161, 159, 157, 1)
+                        DisabledFill: =RGBA(242, 242, 241, 0)
+                        Fill: =cWhite
+                        Font: =gFont
+                        Height: =44
+                        HoverBorderColor: =cRed
+                        HoverColor: =cWhite
+                        HoverFill: =cRed
+                        OnSelect: |-
+                          =ResetForm(frmMachineSettings);
+                          Set(varChamberTorrsCount, 1)
+                        PressedBorderColor: =cRed
+                        PressedColor: =cWhite
+                        PressedFill: =RGBA(150, 0, 0, 1)
+                        RadiusBottomLeft: =4
+                        RadiusBottomRight: =4
+                        RadiusTopLeft: =4
+                        RadiusTopRight: =4
+                        Size: =14
+                        Text: ="Clear All"
+                        Width: =(Parent.Width - 32) / 3
+                  - btnNext_Machine:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =cNavy
+                        BorderThickness: =1
+                        Color: =cWhite
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledColor: =RGBA(161, 159, 157, 1)
+                        DisabledFill: =RGBA(242, 242, 241, 0)
+                        Fill: =cNavy
+                        Font: =gFont
+                        Height: =44
+                        HoverBorderColor: =cNavy
+                        HoverColor: =cWhite
+                        HoverFill: =RGBA(0, 80, 130, 1)
+                        OnSelect: |-
+                          =/*
+                          If(
+                              Connection.Connected,
+                              Patch(Calibrate_Audit_Data,
+                                  LookUp(Calibrate_Audit_Data, ID = If(varEditMode, varSelectedAudit.ID, varAuditSPID)),
+                                  {
+                                      MS_Machine_Speed:       If(IsBlank(txtMachineSpeed.Text) || txtMachineSpeed.Text = "", 0, Value(txtMachineSpeed.Text)),
+                                      MS_Seal_Voltage:        If(IsBlank(txtSealVoltage.Text) || txtSealVoltage.Text = "", 0, Value(txtSealVoltage.Text)),
+                                      MS_Seal_Amps:           If(IsBlank(txtSealAmps.Text) || txtSealAmps.Text = "", 0, Value(txtSealAmps.Text)),
+                                      MS_Seal_Dwell_Time:     If(IsBlank(txtSealDwellTime.Text) || txtSealDwellTime.Text = "", 0, Value(txtSealDwellTime.Text)),
+                                      MS_Seal_Pressure:       If(IsBlank(txtSealPressure.Text) || txtSealPressure.Text = "", 0, Value(txtSealPressure.Text)),
+                                      MS_Chamber_Torrs:       If(IsBlank(txtChamberTorrs1.Text) || txtChamberTorrs1.Text = "", 0, Value(txtChamberTorrs1.Text)),
+                                      MS_Chamber_Torrs2:      If(varChamberTorrsCount >= 2, If(IsBlank(txtChamberTorrs2.Text) || txtChamberTorrs2.Text = "", 0, Value(txtChamberTorrs2.Text)), 0),
+                                      MS_Chamber_Torrs3:      If(varChamberTorrsCount >= 3, If(IsBlank(txtChamberTorrs3.Text) || txtChamberTorrs3.Text = "", 0, Value(txtChamberTorrs3.Text)), 0),
+                                      MS_Chamber_Torrs4:      If(varChamberTorrsCount >= 4, If(IsBlank(txtChamberTorrs4.Text) || txtChamberTorrs4.Text = "", 0, Value(txtChamberTorrs4.Text)), 0),
+                                      MS_Chamber_Torrs5:      If(varChamberTorrsCount >= 5, If(IsBlank(txtChamberTorrs5.Text) || txtChamberTorrs5.Text = "", 0, Value(txtChamberTorrs5.Text)), 0),
+                                      MS_Chamber_Torrs6:      If(varChamberTorrsCount >= 6, If(IsBlank(txtChamberTorrs6.Text) || txtChamberTorrs6.Text = "", 0, Value(txtChamberTorrs6.Text)), 0),
+                                      MS_Chamber_Torrs7:      If(varChamberTorrsCount >= 7, If(IsBlank(txtChamberTorrs7.Text) || txtChamberTorrs7.Text = "", 0, Value(txtChamberTorrs7.Text)), 0),
+                                      MS_Chamber_Torrs8:      If(varChamberTorrsCount >= 8, If(IsBlank(txtChamberTorrs8.Text) || txtChamberTorrs8.Text = "", 0, Value(txtChamberTorrs8.Text)), 0),
+                                      MS_Shrink_Tunnel_Temp:  If(IsBlank(txtShrinkTunnelTemp.Text) || txtShrinkTunnelTemp.Text = "", 0, Value(txtShrinkTunnelTemp.Text)),
+                                      MS_Settings_Comments:   txtSettingsComments.Text,
+                                      MS_General_Comments:    txtGeneralComments.Text
+                                  }
+                              ),
+                              ClearCollect(colMachineRecordCache, {
+                                  MS_Machine_Speed:       If(IsBlank(txtMachineSpeed.Text) || txtMachineSpeed.Text = "", 0, Value(txtMachineSpeed.Text)),
+                                  MS_Seal_Voltage:        If(IsBlank(txtSealVoltage.Text) || txtSealVoltage.Text = "", 0, Value(txtSealVoltage.Text)),
+                                  MS_Seal_Amps:           If(IsBlank(txtSealAmps.Text) || txtSealAmps.Text = "", 0, Value(txtSealAmps.Text)),
+                                  MS_Seal_Dwell_Time:     If(IsBlank(txtSealDwellTime.Text) || txtSealDwellTime.Text = "", 0, Value(txtSealDwellTime.Text)),
+                                  MS_Seal_Pressure:       If(IsBlank(txtSealPressure.Text) || txtSealPressure.Text = "", 0, Value(txtSealPressure.Text)),
+                                  MS_Chamber_Torrs:       If(IsBlank(txtChamberTorrs1.Text) || txtChamberTorrs1.Text = "", 0, Value(txtChamberTorrs1.Text)),
+                                  MS_Chamber_Torrs2:      If(varChamberTorrsCount >= 2, If(IsBlank(txtChamberTorrs2.Text) || txtChamberTorrs2.Text = "", 0, Value(txtChamberTorrs2.Text)), 0),
+                                  MS_Chamber_Torrs3:      If(varChamberTorrsCount >= 3, If(IsBlank(txtChamberTorrs3.Text) || txtChamberTorrs3.Text = "", 0, Value(txtChamberTorrs3.Text)), 0),
+                                  MS_Chamber_Torrs4:      If(varChamberTorrsCount >= 4, If(IsBlank(txtChamberTorrs4.Text) || txtChamberTorrs4.Text = "", 0, Value(txtChamberTorrs4.Text)), 0),
+                                  MS_Chamber_Torrs5:      If(varChamberTorrsCount >= 5, If(IsBlank(txtChamberTorrs5.Text) || txtChamberTorrs5.Text = "", 0, Value(txtChamberTorrs5.Text)), 0),
+                                  MS_Chamber_Torrs6:      If(varChamberTorrsCount >= 6, If(IsBlank(txtChamberTorrs6.Text) || txtChamberTorrs6.Text = "", 0, Value(txtChamberTorrs6.Text)), 0),
+                                  MS_Chamber_Torrs7:      If(varChamberTorrsCount >= 7, If(IsBlank(txtChamberTorrs7.Text) || txtChamberTorrs7.Text = "", 0, Value(txtChamberTorrs7.Text)), 0),
+                                  MS_Chamber_Torrs8:      If(varChamberTorrsCount >= 8, If(IsBlank(txtChamberTorrs8.Text) || txtChamberTorrs8.Text = "", 0, Value(txtChamberTorrs8.Text)), 0),
+                                  MS_Shrink_Tunnel_Temp:  If(IsBlank(txtShrinkTunnelTemp.Text) || txtShrinkTunnelTemp.Text = "", 0, Value(txtShrinkTunnelTemp.Text)),
+                                  MS_Settings_Comments:   txtSettingsComments.Text,
+                                  MS_General_Comments:    txtGeneralComments.Text
+                              });
+                              SaveData(colMachineRecordCache, "MachineRecordCache")
+                          );
+                          */
+                          Navigate(scrAudit)
+                        PressedBorderColor: =cNavy
+                        PressedColor: =cWhite
+                        PressedFill: =RGBA(0, 40, 70, 1)
+                        RadiusBottomLeft: =4
+                        RadiusBottomRight: =4
+                        RadiusTopLeft: =4
+                        RadiusTopRight: =4
+                        Size: =14
+                        Text: ="Next"
+                        Width: =(Parent.Width - 32) / 3

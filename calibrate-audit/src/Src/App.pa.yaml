@@ -1,0 +1,422 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+App:
+  Properties:
+    OnStart: |-
+      =//On Start
+      Set(cNavy,      RGBA(0, 57, 90, 1));
+      Set(cBlue,      RGBA(0, 161, 222, 1));
+      Set(cGreen,     RGBA(0, 165, 81, 1));
+      Set(cSand,      RGBA(165, 157, 149, 1));
+      Set(cGrayLight, RGBA(204, 204, 204, 1));
+      Set(cGrayMid,   RGBA(128, 128, 128, 1));
+      Set(cGrayBg,    RGBA(243, 242, 241, 1));
+      Set(cGrayLine,  RGBA(237, 235, 233, 1));
+      Set(cWhite,     RGBA(255, 255, 255, 1));
+      Set(cText,      RGBA(32, 31, 30, 1));
+      Set(cText2,     RGBA(96, 94, 92, 1));
+      Set(cRed,       RGBA(164, 38, 44, 1));
+      Set(gFont,      Font.'Segoe UI');
+
+      // ─── BASE STATE ──────────────────────────────────────────────────────────────
+      Set(varEditMode,              false);
+      Set(varSelectedAudit,         Blank());
+      Set(varSelectedCustomer,      Blank());
+      Set(varCustomerSearchVisible, false);
+      Set(varCustomerSearchText,    "");
+      Set(varSelectedDisplay,       "");
+      Set(varSelectedCustomerNbr,   "");
+      Set(varShowPhotoPanel,        false);
+      Set(varActivePhotoKey,        "");
+      Set(varShowResumeBanner,      false);
+      Set(varPhotoSource,           "");
+      Set(varHasResumeData,         false);
+
+      // ─── DEFINE localAuditQueue SCHEMA ───────────────────────────────────────────
+      // This ClearCollect teaches Power Apps every column name and type that the
+      // collection will ever use. Without this, LoadData columns are unrecognized.
+      // We immediately Clear it so it is empty but typed correctly.
+      ClearCollect(
+          localAuditQueue,
+          {
+              Title: "",
+              Audit_Date: Today(),
+              Customer: "",
+              Customer_Nbr: "",
+              Location: "",
+              Audit_Type: "",
+              Audit_Type_Detail: "",
+              Machine_Line_Number: "",
+              Machine_Type: "",
+              Machine_Model: "",
+              Machine_Serial_Number: "",
+              Lot_Batch_Number: "",
+              Box_Carton_Number: "",
+              Roll_Number: "",
+              Protein: "",
+              Vendor: "",
+              Cut: "",
+              Bag: "",
+              Product_Type: "",
+              Not_Listed_Product_Info: "",
+              MS_Bag_Width: 0,
+              MS_Bag_Length: 0,
+              MS_Machine_Speed: 0,
+              MS_Seal_Voltage: 0,
+              MS_Seal_Amps: 0,
+              MS_Seal_Dwell_Time: 0,
+              MS_Seal_Pressure: 0,
+              MS_Chamber_Torrs: 0,
+              MS_Chamber_Torrs2: 0,
+              MS_Chamber_Torrs3: 0,
+              MS_Chamber_Torrs4: 0,
+              MS_Chamber_Torrs5: 0,
+              MS_Chamber_Torrs6: 0,
+              MS_Chamber_Torrs7: 0,
+              MS_Chamber_Torrs8: 0,
+              MS_Shrink_Tunnel_Temp: 0,
+              MS_Settings_Comments: "",
+              MS_General_Comments: "",
+              MF_Low_Vacuum: 0,
+              MF_Cold_Seal: 0,
+              MF_Edge_Tear: 0,
+              MF_Pull_Back: 0,
+              MF_Burnt_Seals: 0,
+              MF_Other_Count: 0,
+              MF_Other_Explain: "",
+              OF_Meat_In_Seals: 0,
+              OF_Product_Related_Reject: 0,
+              OF_Multiple_Pleat: 0,
+              OF_Bag_Tear: 0,
+              OF_Incomplete_Seal: 0,
+              OF_Uncovered_Bone_Puncture: 0,
+              OF_Pull_Back_Meat_DTS: 0,
+              OF_Two_Per_Platen: 0,
+              OF_Other_Count: 0,
+              OF_Other_Explain: "",
+              BRF_Hole_Before_Shrink: 0,
+              BRF_Hole_After_Shrink: 0,
+              BRF_Covered_Bone_Puncture: 0,
+              BRF_Single_Pleat: 0,
+              BRF_Edge_Tear: 0,
+              BRF_Factory_Seal: 0,
+              BRF_Heel_Break: 0,
+              BRF_Other_Count: 0,
+              BRF_Other_Explain: "",
+              Total_Packages: 0,
+              Total_Failures: 0,
+              Down_Time_During_Audit: "",
+              Est_Down_Time_Savings: "",
+              External_Findings_Changes: "",
+              Internal_Comments: ""
+          }
+      );
+      Clear(localAuditQueue);
+
+      // ─── DEFINE colPhotoFlags SCHEMA ─────────────────────────────────────────────
+      // Photo flags are stored in their own SaveData collection separately from
+      // localAuditQueue because they are boolean vars not numeric fields.
+      // Schema defined first then LoadData overwrites it.
+      ClearCollect(
+          colPhotoFlags,
+          {
+              Photo_MF_LowVac: false,
+              Photo_MF_ColdSeal: false,
+              Photo_MF_EdgeTear: false,
+              Photo_MF_PullBack: false,
+              Photo_MF_BurntSeals: false,
+              Photo_MF_Other: false,
+              Photo_OF_MeatInSeals: false,
+              Photo_OF_ProdReject: false,
+              Photo_OF_MultiplePleat: false,
+              Photo_OF_BagTear: false,
+              Photo_OF_IncompleteSeal: false,
+              Photo_OF_UncoveredBone: false,
+              Photo_OF_PullBack: false,
+              Photo_OF_TwoPerPlaten: false,
+              Photo_OF_Other: false,
+              Photo_BRF_HoleBeforeShrink: false,
+              Photo_BRF_HoleAfterShrink: false,
+              Photo_BRF_CoveredBone: false,
+              Photo_BRF_SinglePleat: false,
+              Photo_BRF_EdgeTear: false,
+              Photo_BRF_FactorySeal: false,
+              Photo_BRF_HealBreak: false,
+              Photo_BRF_Other: false
+          }
+      );
+      Clear(colPhotoFlags);
+
+      // ─── LOAD CACHED DATA ────────────────────────────────────────────────────────
+      // true = suppress error if file doesn't exist yet on first launch
+      LoadData(localAuditQueue, "AuditCache", true);
+      LoadData(colPhotoFlags,   "PhotoFlagsCache", true);
+
+      // ─── COLLECTIONS ─────────────────────────────────────────────────────────────
+      ClearCollect(colPhotos,      {key: "", photo: Blank()});
+      ClearCollect(colAttachments, {Name: "", Value: Blank()});
+      ClearCollect(colCustomers,   Sort(Customers, customer_name, SortOrder.Ascending));
+      Collect(colCustomers, {customer_name: "-- Other --", customer_nbr: "", customer_location: ""});
+
+      // ─── SYNC COMPLETED ROWS TO SHAREPOINT ───────────────────────────────────────
+      // Only sync rows where the Title already exists in SharePoint.
+      // These are rows that were submitted but the cache was never cleared
+      // (e.g. app crashed during photo upload).
+      // In-progress rows (not yet in SharePoint) are left alone.
+      If(
+          Connection.Connected,
+          If(
+              CountRows(
+                  Filter(
+                      localAuditQueue,
+                      !IsBlank(Title) && Title <> "" &&
+                      !IsEmpty(Filter(Calibrate_Audit_Data, Title = ThisRecord.Title))
+                  )
+              ) > 0,
+              ForAll(
+                  Filter(
+                      localAuditQueue,
+                      !IsBlank(Title) && Title <> "" &&
+                      !IsEmpty(Filter(Calibrate_Audit_Data, Title = ThisRecord.Title))
+                  ),
+                  Patch(
+                      Calibrate_Audit_Data,
+                      LookUp(Calibrate_Audit_Data, Title = ThisRecord.Title),
+                      {
+                          Audit_Date:                 ThisRecord.Audit_Date,
+                          Customer:                   ThisRecord.Customer,
+                          Customer_Nbr:               ThisRecord.Customer_Nbr,
+                          Location:                   ThisRecord.Location,
+                          Audit_Type:                 ThisRecord.Audit_Type,
+                          Audit_Type_Detail:          ThisRecord.Audit_Type_Detail,
+                          Machine_Line_Number:        ThisRecord.Machine_Line_Number,
+                          Machine_Type:               ThisRecord.Machine_Type,
+                          Machine_Model:              ThisRecord.Machine_Model,
+                          Machine_Serial_Number:      ThisRecord.Machine_Serial_Number,
+                          Lot_Batch_Number:           ThisRecord.Lot_Batch_Number,
+                          Box_Carton_Number:          ThisRecord.Box_Carton_Number,
+                          Roll_Number:                ThisRecord.Roll_Number,
+                          Protein:                    ThisRecord.Protein,
+                          Vendor:                     ThisRecord.Vendor,
+                          Cut:                        ThisRecord.Cut,
+                          Bag:                        ThisRecord.Bag,
+                          Product_Type:               ThisRecord.Product_Type,
+                          Not_Listed_Product_Info:    ThisRecord.Not_Listed_Product_Info,
+                          MS_Bag_Width:               ThisRecord.MS_Bag_Width,
+                          MS_Bag_Length:              ThisRecord.MS_Bag_Length,
+                          MS_Machine_Speed:           ThisRecord.MS_Machine_Speed,
+                          MS_Seal_Voltage:            ThisRecord.MS_Seal_Voltage,
+                          MS_Seal_Amps:               ThisRecord.MS_Seal_Amps,
+                          MS_Seal_Dwell_Time:         ThisRecord.MS_Seal_Dwell_Time,
+                          MS_Seal_Pressure:           ThisRecord.MS_Seal_Pressure,
+                          MS_Chamber_Torrs:           ThisRecord.MS_Chamber_Torrs,
+                          MS_Chamber_Torrs2:          ThisRecord.MS_Chamber_Torrs2,
+                          MS_Chamber_Torrs3:          ThisRecord.MS_Chamber_Torrs3,
+                          MS_Chamber_Torrs4:          ThisRecord.MS_Chamber_Torrs4,
+                          MS_Chamber_Torrs5:          ThisRecord.MS_Chamber_Torrs5,
+                          MS_Chamber_Torrs6:          ThisRecord.MS_Chamber_Torrs6,
+                          MS_Chamber_Torrs7:          ThisRecord.MS_Chamber_Torrs7,
+                          MS_Chamber_Torrs8:          ThisRecord.MS_Chamber_Torrs8,
+                          MS_Shrink_Tunnel_Temp:      ThisRecord.MS_Shrink_Tunnel_Temp,
+                          MS_Settings_Comments:       ThisRecord.MS_Settings_Comments,
+                          MS_General_Comments:        ThisRecord.MS_General_Comments,
+                          MF_Low_Vacuum:              ThisRecord.MF_Low_Vacuum,
+                          MF_Cold_Seal:               ThisRecord.MF_Cold_Seal,
+                          MF_Edge_Tear:               ThisRecord.MF_Edge_Tear,
+                          MF_Pull_Back:               ThisRecord.MF_Pull_Back,
+                          MF_Burnt_Seals:             ThisRecord.MF_Burnt_Seals,
+                          MF_Other_Count:             ThisRecord.MF_Other_Count,
+                          MF_Other_Explain:           ThisRecord.MF_Other_Explain,
+                          OF_Meat_In_Seals:           ThisRecord.OF_Meat_In_Seals,
+                          OF_Product_Related_Reject:  ThisRecord.OF_Product_Related_Reject,
+                          OF_Multiple_Pleat:          ThisRecord.OF_Multiple_Pleat,
+                          OF_Bag_Tear:                ThisRecord.OF_Bag_Tear,
+                          OF_Incomplete_Seal:         ThisRecord.OF_Incomplete_Seal,
+                          OF_Uncovered_Bone_Puncture: ThisRecord.OF_Uncovered_Bone_Puncture,
+                          OF_Pull_Back_Meat_DTS:      ThisRecord.OF_Pull_Back_Meat_DTS,
+                          OF_Two_Per_Platen:          ThisRecord.OF_Two_Per_Platen,
+                          OF_Other_Count:             ThisRecord.OF_Other_Count,
+                          OF_Other_Explain:           ThisRecord.OF_Other_Explain,
+                          BRF_Hole_Before_Shrink:     ThisRecord.BRF_Hole_Before_Shrink,
+                          BRF_Hole_After_Shrink:      ThisRecord.BRF_Hole_After_Shrink,
+                          BRF_Covered_Bone_Puncture:  ThisRecord.BRF_Covered_Bone_Puncture,
+                          BRF_Single_Pleat:           ThisRecord.BRF_Single_Pleat,
+                          BRF_Edge_Tear:              ThisRecord.BRF_Edge_Tear,
+                          BRF_Factory_Seal:           ThisRecord.BRF_Factory_Seal,
+                          BRF_Heel_Break:             ThisRecord.BRF_Heel_Break,
+                          BRF_Other_Count:            ThisRecord.BRF_Other_Count,
+                          BRF_Other_Explain:          ThisRecord.BRF_Other_Explain,
+                          Total_Packages:             ThisRecord.Total_Packages,
+                          Total_Failures:             ThisRecord.Total_Failures,
+                          Down_Time_During_Audit:     ThisRecord.Down_Time_During_Audit,
+                          Est_Down_Time_Savings:      ThisRecord.Est_Down_Time_Savings,
+                          External_Findings_Changes:  ThisRecord.External_Findings_Changes,
+                          Internal_Comments:          ThisRecord.Internal_Comments
+                      }
+                  )
+              );
+              RemoveIf(
+                  localAuditQueue,
+                  !IsBlank(Title) && Title <> "" &&
+                  !IsEmpty(Filter(Calibrate_Audit_Data, Title = ThisRecord.Title))
+              );
+              SaveData(localAuditQueue, "AuditCache")
+          )
+      );
+
+      // ─── RESUME CHECK ─────────────────────────────────────────────────────────────
+      Set(
+          varHasResumeData,
+          CountRows(
+              Filter(
+                  localAuditQueue,
+                  !IsBlank(Title) && Title <> "" &&
+                  IsEmpty(Filter(Calibrate_Audit_Data, Title = ThisRecord.Title))
+              )
+          ) > 0
+      );
+
+      If(
+          varHasResumeData,
+
+          // ── RESUME MODE ───────────────────────────────────────────────────────────
+          With(
+              {
+                  r: First(
+                      Filter(
+                          localAuditQueue,
+                          !IsBlank(Title) && Title <> "" &&
+                          IsEmpty(Filter(Calibrate_Audit_Data, Title = ThisRecord.Title))
+                      )
+                  ),
+                  f: If(
+                      CountRows(colPhotoFlags) > 0,
+                      First(colPhotoFlags),
+                      {
+                          Photo_MF_LowVac: false,          Photo_MF_ColdSeal: false,
+                          Photo_MF_EdgeTear: false,         Photo_MF_PullBack: false,
+                          Photo_MF_BurntSeals: false,       Photo_MF_Other: false,
+                          Photo_OF_MeatInSeals: false,      Photo_OF_ProdReject: false,
+                          Photo_OF_MultiplePleat: false,    Photo_OF_BagTear: false,
+                          Photo_OF_IncompleteSeal: false,   Photo_OF_UncoveredBone: false,
+                          Photo_OF_PullBack: false,         Photo_OF_TwoPerPlaten: false,
+                          Photo_OF_Other: false,
+                          Photo_BRF_HoleBeforeShrink: false,Photo_BRF_HoleAfterShrink: false,
+                          Photo_BRF_CoveredBone: false,     Photo_BRF_SinglePleat: false,
+                          Photo_BRF_EdgeTear: false,        Photo_BRF_FactorySeal: false,
+                          Photo_BRF_HealBreak: false,       Photo_BRF_Other: false
+                      }
+                  )
+              },
+              // Restore audit key and all count vars
+              Set(varAuditKey,             r.Title);
+              Set(varTotalPackages,        r.Total_Packages);
+              Set(varMF_LowVac,            r.MF_Low_Vacuum);
+              Set(varMF_ColdSeal,          r.MF_Cold_Seal);
+              Set(varMF_EdgeTear,          r.MF_Edge_Tear);
+              Set(varMF_PullBack,          r.MF_Pull_Back);
+              Set(varMF_BurntSeals,        r.MF_Burnt_Seals);
+              Set(varMF_Other,             r.MF_Other_Count);
+              Set(varOF_MeatInSeals,       r.OF_Meat_In_Seals);
+              Set(varOF_ProdReject,        r.OF_Product_Related_Reject);
+              Set(varOF_MultiplePleat,     r.OF_Multiple_Pleat);
+              Set(varOF_BagTear,           r.OF_Bag_Tear);
+              Set(varOF_IncompleteSeal,    r.OF_Incomplete_Seal);
+              Set(varOF_UncoveredBone,     r.OF_Uncovered_Bone_Puncture);
+              Set(varOF_PullBack,          r.OF_Pull_Back_Meat_DTS);
+              Set(varOF_TwoPerPlaten,      r.OF_Two_Per_Platen);
+              Set(varOF_Other,             r.OF_Other_Count);
+              Set(varBRF_HoleBeforeShrink, r.BRF_Hole_Before_Shrink);
+              Set(varBRF_HoleAfterShrink,  r.BRF_Hole_After_Shrink);
+              Set(varBRF_CoveredBone,      r.BRF_Covered_Bone_Puncture);
+              Set(varBRF_SinglePleat,      r.BRF_Single_Pleat);
+              Set(varBRF_EdgeTear,         r.BRF_Edge_Tear);
+              Set(varBRF_FactorySeal,      r.BRF_Factory_Seal);
+              Set(varBRF_HealBreak,        r.BRF_Heel_Break);
+              Set(varBRF_Other,            r.BRF_Other_Count);
+
+              // Chamber torrs count
+              Set(
+                  varChamberTorrsCount,
+                  1 +
+                  If(r.MS_Chamber_Torrs2 > 0, 1, 0) +
+                  If(r.MS_Chamber_Torrs3 > 0, 1, 0) +
+                  If(r.MS_Chamber_Torrs4 > 0, 1, 0) +
+                  If(r.MS_Chamber_Torrs5 > 0, 1, 0) +
+                  If(r.MS_Chamber_Torrs6 > 0, 1, 0) +
+                  If(r.MS_Chamber_Torrs7 > 0, 1, 0) +
+                  If(r.MS_Chamber_Torrs8 > 0, 1, 0)
+              );
+
+              // Restore selected customer
+              Set(
+                  varSelectedCustomer,
+                  If(
+                      !IsBlank(r.Customer) && r.Customer <> "",
+                      LookUp(Customers, customer_name = r.Customer),
+                      Blank()
+                  )
+              );
+
+              // Restore photo flags from colPhotoFlags cache
+              Set(varPhoto_MF_LowVac,            f.Photo_MF_LowVac);
+              Set(varPhoto_MF_ColdSeal,          f.Photo_MF_ColdSeal);
+              Set(varPhoto_MF_EdgeTear,          f.Photo_MF_EdgeTear);
+              Set(varPhoto_MF_PullBack,          f.Photo_MF_PullBack);
+              Set(varPhoto_MF_BurntSeals,        f.Photo_MF_BurntSeals);
+              Set(varPhoto_MF_Other,             f.Photo_MF_Other);
+              Set(varPhoto_OF_MeatInSeals,       f.Photo_OF_MeatInSeals);
+              Set(varPhoto_OF_ProdReject,        f.Photo_OF_ProdReject);
+              Set(varPhoto_OF_MultiplePleat,     f.Photo_OF_MultiplePleat);
+              Set(varPhoto_OF_BagTear,           f.Photo_OF_BagTear);
+              Set(varPhoto_OF_IncompleteSeal,    f.Photo_OF_IncompleteSeal);
+              Set(varPhoto_OF_UncoveredBone,     f.Photo_OF_UncoveredBone);
+              Set(varPhoto_OF_PullBack,          f.Photo_OF_PullBack);
+              Set(varPhoto_OF_TwoPerPlaten,      f.Photo_OF_TwoPerPlaten);
+              Set(varPhoto_OF_Other,             f.Photo_OF_Other);
+              Set(varPhoto_BRF_HoleBeforeShrink, f.Photo_BRF_HoleBeforeShrink);
+              Set(varPhoto_BRF_HoleAfterShrink,  f.Photo_BRF_HoleAfterShrink);
+              Set(varPhoto_BRF_CoveredBone,      f.Photo_BRF_CoveredBone);
+              Set(varPhoto_BRF_SinglePleat,      f.Photo_BRF_SinglePleat);
+              Set(varPhoto_BRF_EdgeTear,         f.Photo_BRF_EdgeTear);
+              Set(varPhoto_BRF_FactorySeal,      f.Photo_BRF_FactorySeal);
+              Set(varPhoto_BRF_HealBreak,        f.Photo_BRF_HealBreak);
+              Set(varPhoto_BRF_Other,            f.Photo_BRF_Other);
+
+              Set(varShowResumeBanner, true)
+          ),
+
+          // ── FRESH START ───────────────────────────────────────────────────────────
+          Set(varAuditKey, "");
+          Set(varTotalPackages, 0);
+          Set(varChamberTorrsCount, 1);
+          Set(varMF_LowVac, 0);       Set(varMF_ColdSeal, 0);     Set(varMF_EdgeTear, 0);
+          Set(varMF_PullBack, 0);     Set(varMF_BurntSeals, 0);   Set(varMF_Other, 0);
+          Set(varOF_MeatInSeals, 0);  Set(varOF_ProdReject, 0);   Set(varOF_MultiplePleat, 0);
+          Set(varOF_BagTear, 0);      Set(varOF_IncompleteSeal, 0);Set(varOF_UncoveredBone, 0);
+          Set(varOF_PullBack, 0);     Set(varOF_TwoPerPlaten, 0); Set(varOF_Other, 0);
+          Set(varBRF_HoleBeforeShrink, 0); Set(varBRF_HoleAfterShrink, 0);
+          Set(varBRF_CoveredBone, 0);      Set(varBRF_SinglePleat, 0);
+          Set(varBRF_EdgeTear, 0);         Set(varBRF_FactorySeal, 0);
+          Set(varBRF_HealBreak, 0);        Set(varBRF_Other, 0);
+          Set(varPhoto_MF_LowVac, false);      Set(varPhoto_MF_ColdSeal, false);
+          Set(varPhoto_MF_EdgeTear, false);    Set(varPhoto_MF_PullBack, false);
+          Set(varPhoto_MF_BurntSeals, false);  Set(varPhoto_MF_Other, false);
+          Set(varPhoto_OF_MeatInSeals, false); Set(varPhoto_OF_ProdReject, false);
+          Set(varPhoto_OF_MultiplePleat, false);Set(varPhoto_OF_BagTear, false);
+          Set(varPhoto_OF_IncompleteSeal, false);Set(varPhoto_OF_UncoveredBone, false);
+          Set(varPhoto_OF_PullBack, false);    Set(varPhoto_OF_TwoPerPlaten, false);
+          Set(varPhoto_OF_Other, false);
+          Set(varPhoto_BRF_HoleBeforeShrink, false);Set(varPhoto_BRF_HoleAfterShrink, false);
+          Set(varPhoto_BRF_CoveredBone, false);     Set(varPhoto_BRF_SinglePleat, false);
+          Set(varPhoto_BRF_EdgeTear, false);        Set(varPhoto_BRF_FactorySeal, false);
+          Set(varPhoto_BRF_HealBreak, false);       Set(varPhoto_BRF_Other, false);
+          Set(varShowResumeBanner, false)
+      )
+    Theme: =PowerAppsTheme

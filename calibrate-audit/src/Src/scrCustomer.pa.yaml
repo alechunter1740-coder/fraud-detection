@@ -1,0 +1,2223 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  scrCustomer:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
+      OnVisible: |-
+        =If(
+            varEditMode,
+            Set(varCustomerSearchVisible, false);
+            Set(varLocationSearchVisible, false);
+            Set(varCustomerSearchText, "");
+            Set(varLocationSearchText, "");
+            Set(varSelectedCustomer,
+                If(
+                    IsBlank(LookUp(Customers, customer_name = varSelectedAudit.Customer)),
+                    {customer_name: "-- Other --", customer_nbr: "", customer_location: ""},
+                    LookUp(Customers, customer_name = varSelectedAudit.Customer)
+                )
+            );
+            Set(varSelectedLocation,
+                If(
+                    CountRows(
+                        Filter(
+                            Distinct(
+                                Filter(Calibrate_Audit_Data, !IsBlank(Location) && Location <> ""),
+                                Location
+                            ),
+                            Value = varSelectedAudit.Location
+                        )
+                    ) = 0,
+                    {Value: "-- Other --"},
+                    {Value: varSelectedAudit.Location}
+                )
+            )
+        )
+    Children:
+      - ScreenContainer_Customer:
+          Control: GroupContainer@1.5.0
+          Variant: AutoLayout
+          Properties:
+            Fill: =RGBA(245, 245, 245, 1)
+            Height: =Parent.Height
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutGap: =16
+            PaddingBottom: =16
+            PaddingLeft: =16
+            PaddingRight: =16
+            PaddingTop: =16
+            Width: =Parent.Width
+          Children:
+            - HeaderContainer_Customer:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =cNavy
+                  FillPortions: =0
+                  Height: =imgAmcorLogo_Customer.Height + Self.PaddingTop + Self.PaddingBottom
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutMinHeight: =16
+                  LayoutMinWidth: =16
+                  LayoutWrap: =true
+                  PaddingBottom: =8
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PaddingTop: =8
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                Children:
+                  - imgAmcorLogo_Customer:
+                      Control: Image@2.2.3
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =2
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4
+                        Height: =40
+                        HoverBorderColor: =RGBA(0, 0, 0, 0)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        Image: =AmcorLogo_Transparent_Icon
+                        PressedBorderColor: =RGBA(0, 0, 0, 0)
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Width: =40
+                  - lblAppName_Customer:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =cWhite
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        FillPortions: =1
+                        Font: =gFont
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingLeft: =0
+                        Size: =If(Parent.Width < 320, 11, 14)
+                        Text: ="Calibrate Audit"
+                        Width: =134
+                  - btnSaveIcon_Customer:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        Color: =If(Connection.Connected, cWhite, RGBA(255, 200, 80, 1))
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledColor: =RGBA(255, 255, 255, 0.3)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4
+                        Height: =32
+                        HoverBorderColor: =RGBA(0, 0, 0, 0)
+                        HoverColor: =RGBA(255, 255, 255, 0.75)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        Icon: =Icon.Save
+                        LayoutMinHeight: =16
+                        LayoutMinWidth: =16
+                        OnSelect: |-
+                          =Set(varCustomerRecord, {
+                              Title:                   varAuditKey,
+                              Audit_Date:              dteAudit.SelectedDate,
+                              Customer:                If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
+                              Customer_Nbr:            If(varSelectedCustomer.customer_name = "-- Other --", "", varSelectedCustomer.customer_nbr),
+                              Location:                If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value),
+                              Audit_Type:              If(cmbAuditType.Selected.Value = "-- Other --", txtAuditTypeOther.Text, cmbAuditType.Selected.Value),
+                              Audit_Type_Detail:       txtAuditTypeDetail.Text,
+                              'Audit Desc':            txtAuditDesc.Text,
+                              Machine_Line_Number:     If(varPriorRecordsExist, If(varSelectedLineNumber.Value = "-- Other --", txtMachineLineNum.Text, varSelectedLineNumber.Value), txtMachineLineNum.Text),
+                              Machine_Serial_Number:   If(varPriorRecordsExist, If(varSelectedSerialNumber.Value = "-- Other --", txtSerialNum.Text, varSelectedSerialNumber.Value), txtSerialNum.Text),
+                              Lot_Batch_Number:        If(varPriorRecordsExist, If(varSelectedLotBatch.Value = "-- Other --", txtBatchLot.Text, varSelectedLotBatch.Value), txtBatchLot.Text),
+                              Box_Carton_Number:       If(varPriorRecordsExist, If(varSelectedBoxCarton.Value = "-- Other --", txtCarton.Text, varSelectedBoxCarton.Value), txtCarton.Text),
+                              Roll_Number:             If(varPriorRecordsExist, If(varSelectedRollNumber.Value = "-- Other --", txtRoll.Text, varSelectedRollNumber.Value), txtRoll.Text),
+                              Protein:                 If(cmbProtein.Selected.Value = "-- Other --", txtProteinOther.Text, cmbProtein.Selected.Value),
+                              Vendor:                  If(cmbVendor.Selected.Value = "-- Other --", txtVendorOther.Text, cmbVendor.Selected.Value),
+                              Cut:                     If(cmbCut.Selected.Value = "-- Other --", txtCutOther.Text, cmbCut.Selected.Value),
+                              Bag:                     If(cmbBag.Selected.Value = "-- Other --", txtBagOther.Text, cmbBag.Selected.Value),
+                              Product_Type:            cmbProductType.Selected.Value,
+                              Not_Listed_Product_Info: txtNotListedProductInfo.Text,
+                              MS_Bag_Width:            If(IsBlank(txtBagWidth.Text) || txtBagWidth.Text = "", 0, Value(txtBagWidth.Text)),
+                              MS_Bag_Length:           If(IsBlank(txtBagLength.Text) || txtBagLength.Text = "", 0, Value(txtBagLength.Text))
+                          });
+                          If(
+                              Connection.Connected,
+                              With({_byId: LookUp(Calibrate_Audit_Data, ID = varAuditSPID)},
+                                  With({_row: If(!IsBlank(_byId), _byId, LookUp(Calibrate_Audit_Data, Title = varAuditKey))},
+                                      Set(varAuditSPID,
+                                          Patch(Calibrate_Audit_Data, If(IsBlank(_row), Defaults(Calibrate_Audit_Data), _row), varCustomerRecord).ID
+                                      )
+                                  )
+                              );
+                              Set(varSavedCustomer, varCustomerRecord.Customer);
+                              Set(varSavedDate, varCustomerRecord.Audit_Date);
+                              Notify("Saved to list.", NotificationType.Success),
+                              ClearCollect(colCustomerRecordCache, varCustomerRecord);
+                              SaveData(colCustomerRecordCache, "CustomerRecordCache");
+                              Set(varSavedCustomer, varCustomerRecord.Customer);
+                              Set(varSavedDate, varCustomerRecord.Audit_Date);
+                              Notify("No connection — saved locally. Will sync when back online.", NotificationType.Warning)
+                          )
+                        PressedBorderColor: =RGBA(0, 0, 0, 0)
+                        PressedColor: =RGBA(255, 255, 255, 0.5)
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Tooltip: =If(Connection.Connected, "Save to list", "Save offline")
+                        Width: =32
+                  - rectBtnDivider_Customer:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderStyle: =BorderStyle.None
+                        Fill: =RGBA(0, 0, 0, 0)
+                        Height: =44
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        LayoutMinHeight: =16
+                        LayoutMinWidth: =16
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Width: =16
+                        X: =40
+                        Y: =40
+                  - btnHome_Customer:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        Color: =cWhite
+                        DisabledBorderColor: =RGBA(245, 245, 245, 1)
+                        DisabledColor: =RGBA(225, 223, 221, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4
+                        Height: =32
+                        HoverBorderColor: =RGBA(0, 0, 0, 0)
+                        HoverColor: =RGBA(255, 255, 255, 0.75)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        Icon: =Icon.Home
+                        LayoutMinHeight: =16
+                        LayoutMinWidth: =16
+                        OnSelect: =Navigate(scrHome)
+                        PressedBorderColor: =RGBA(0, 0, 0, 0)
+                        PressedColor: =RGBA(255, 255, 255, 0.5)
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        Width: =32
+            - SubHeaderContainer_Customer:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  DropShadow: =DropShadow.None
+                  Fill: =RGBA(245, 245, 245, 1)
+                  FillPortions: =0
+                  Height: =24
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutMinHeight: =44
+                  LayoutMinWidth: =16
+                  PaddingBottom: =8
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PaddingTop: =8
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                Children:
+                  - lblSubHeader_Customer:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: =""
+                        BorderThickness: =0
+                        Fill: =RGBA(0,0,0,0)
+                        FillPortions: =1
+                        Font: =gFont
+                        FontColor: =cText
+                        Height: =28
+                        Size: =20
+                        Text: ="Customer & Machine Details"
+                        VerticalAlign: ="Middle"
+                        Weight: ="Semibold"
+                        Width: =Parent.Width - 16
+            - MainContainer_Customer:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(255, 255, 255, 1)
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutMinHeight: =16
+                  LayoutMinWidth: =16
+                  LayoutWrap: =true
+                  PaddingBottom: =8
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PaddingTop: =8
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                Children:
+                  - frmCustomerInfo:
+                      Control: Form@2.4.4
+                      Layout: Vertical
+                      Properties:
+                        BorderColor: =RGBA(245, 245, 245, 1)
+                        DataSource: =Calibrate_Audit_Data
+                        DefaultMode: =If(varEditMode, FormMode.Edit, FormMode.New)
+                        Item: =If(varEditMode, varSelectedAudit, Blank())
+                        LayoutMinHeight: =16
+                        LayoutMinWidth: =Parent.Width
+                      Children:
+                        - crdCustomerInfoHeader:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Title"
+                              Default: =ThisItem.Title
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Title)
+                              Height: =41
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Title)
+                              Required: =false
+                              Update: =""
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                            Children:
+                              - rectCustInfoHeaderBg:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    Fill: =RGBA(250, 250, 250, 1)
+                                    Height: =40
+                                    Width: =Parent.Width
+                              - rectCustInfoHeaderBorder:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    Fill: =RGBA(0, 57, 90, 1)
+                                    Height: =2
+                                    Width: =Parent.Width
+                                    Y: =39
+                              - lblCustInfoHeaderText:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(0, 57, 90, 1)
+                                    Font: =gFont
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =39
+                                    PaddingLeft: =16
+                                    Size: =14
+                                    Text: ="CUSTOMER INFORMATION"
+                                    Width: =Parent.Width
+                        - crdCustomer:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Customer"
+                              Default: =ThisItem.Customer
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Customer)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Customer)
+                              Required: =false
+                              Update: =If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =1
+                            Children:
+                              - lblCustomer:
+                                  Control: ModernText@1.0.0
+                                  Properties:
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =23
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =16
+                                    Text: =Parent.DisplayName
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - lblCustomerSelected:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =If(IsBlank(varSelectedCustomer.customer_name), RGBA(166, 166, 166, 1), cText)
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Height: =38
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    OnSelect: =Set(varCustomerSearchVisible, true)
+                                    PaddingLeft: =8
+                                    Size: =14
+                                    Text: =If(IsBlank(varSelectedCustomer.customer_name), "Search customer...", varSelectedCustomer.customer_name)
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblCustomer.Y + lblCustomer.Height + 4
+                              - txtCustomerSearch:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =cNavy
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =varCustomerSearchText
+                                    DelayOutput: =true
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Height: =38
+                                    HintText: ="Type to search customers..."
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    OnChange: =Set(varSelectedCustomer, Blank()); Set(varCustomerSearchText, Self.Text)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Visible: =varCustomerSearchVisible
+                                    Width: =lblCustomerSelected.Width
+                                    X: =24
+                                    Y: =lblCustomer.Y + lblCustomer.Height + 4
+                              - galCustomerSearch:
+                                  Control: Gallery@2.15.0
+                                  Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
+                                  Properties:
+                                    BorderColor: =RGBA(200, 200, 200, 1)
+                                    BorderThickness: =1
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Height: =Min(CountRows(galCustomerSearch.AllItems) * 40, 200)
+                                    Items: |-
+                                      =If(
+                                          Len(txtCustomerSearch.Text) >= 2,
+                                          Table(
+                                              {customer_name: "-- Other --", customer_nbr: "", customer_location: ""},
+                                              Filter(Customers, StartsWith(customer_name, txtCustomerSearch.Text))
+                                          ),
+                                          Blank()
+                                      )
+                                    TemplateSize: =40
+                                    Visible: =varCustomerSearchVisible && Len(txtCustomerSearch.Text) >= 2
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =txtCustomerSearch.Y + txtCustomerSearch.Height
+                                  Children:
+                                    - rectGalCustomerBg:
+                                        Control: Rectangle@2.3.0
+                                        Properties:
+                                          Fill: =If(ThisItem.IsSelected, RGBA(235, 244, 250, 1), RGBA(255, 255, 255, 1))
+                                          Height: =Parent.TemplateHeight
+                                          Width: =Parent.Width
+                                    - lblGalCustomerName:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          AutoHeight: =true
+                                          Color: =cNavy
+                                          Font: =gFont
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =Parent.TemplateHeight
+                                          PaddingLeft: =12
+                                          PaddingTop: =0
+                                          Size: =14
+                                          Text: =ThisItem.customer_name
+                                          Width: =Parent.Width * 0.6
+                                    - lblGalCustomerLocation:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Right
+                                          Color: =cText2
+                                          Font: =gFont
+                                          Height: =Parent.TemplateHeight
+                                          PaddingRight: =12
+                                          PaddingTop: =0
+                                          Size: =11
+                                          Text: =ThisItem.customer_location
+                                          Width: =Parent.Width * 0.4
+                                          X: =Parent.Width * 0.6
+                                    - rectGalCustomerDivider:
+                                        Control: Rectangle@2.3.0
+                                        Properties:
+                                          Fill: =RGBA(237, 235, 233, 1)
+                                          Height: =1
+                                          Width: =Parent.Width
+                                          Y: =Parent.TemplateHeight - 1
+                                    - btnGalCustomerSelect:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =RGBA(0, 0, 0, 0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =RGBA(0, 0, 0, 0)
+                                          Fill: =RGBA(0, 0, 0, 0)
+                                          Height: =Parent.TemplateHeight
+                                          HoverColor: =RGBA(0, 0, 0, 0)
+                                          HoverFill: =RGBA(235, 244, 250, 0.6)
+                                          OnSelect: |-
+                                            =Set(varSelectedCustomer, ThisItem);
+                                            Set(varSelectedLocation, {Value: ThisItem.customer_location});
+                                            Set(varCustomerSearchVisible, false);
+                                            Set(varCustomerSearchText, "");
+                                            Set(varPriorRecordsExist,
+                                                CountRows(
+                                                    Filter(
+                                                        Calibrate_Audit_Data,
+                                                        Customer = If(ThisItem.customer_name = "-- Other --", txtCustomerOther.Text, ThisItem.customer_name) &&
+                                                        Location = ThisItem.customer_location
+                                                    )
+                                                ) > 0
+                                            );
+                                            Set(varSelectedLineNumber, Blank());
+                                            Set(varSelectedSerialNumber, Blank());
+                                            Set(varSelectedLotBatch, Blank());
+                                            Set(varSelectedBoxCarton, Blank());
+                                            Set(varSelectedRollNumber, Blank())
+                                          PressedFill: =RGBA(210, 228, 240, 0.8)
+                                          Text: =""
+                                          Width: =Parent.Width
+                              - txtCustomerOther:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: ="Other Customer"
+                                    Default: =If(varEditMode && !IsBlank(varSelectedAudit.Customer) && IsBlank(LookUp(Customers, customer_name = varSelectedAudit.Customer)), varSelectedAudit.Customer, "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter customer name..."
+                                    Size: =0
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: ="None"
+                                    Visible: =varSelectedCustomer.customer_name = "-- Other --"
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =lblCustomerSelected.Y + lblCustomerSelected.Height + 4
+                        - crdLocation:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Location"
+                              Default: =ThisItem.Location
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Location)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Location)
+                              Required: =false
+                              Update: =If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, If(!IsBlank(varSelectedLocation.Value), varSelectedLocation.Value, ""))
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =1
+                            Children:
+                              - lblLocation:
+                                  Control: ModernText@1.0.0
+                                  Properties:
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =23
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =16
+                                    Text: =Parent.DisplayName
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - lblLocationSelected:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =If(IsBlank(varSelectedLocation.Value), RGBA(166, 166, 166, 1), cText)
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Height: =38
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    OnSelect: =Set(varLocationSearchVisible, true)
+                                    PaddingLeft: =8
+                                    Size: =14
+                                    Text: =If(IsBlank(varSelectedLocation.Value), "Search or select location...", varSelectedLocation.Value)
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblLocation.Y + lblLocation.Height + 4
+                              - txtLocationSearch:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =cNavy
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =varLocationSearchText
+                                    DelayOutput: =true
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Height: =38
+                                    HintText: ="Type to search locations..."
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    OnChange: =Set(varSelectedLocation, Blank()); Set(varLocationSearchText, Self.Text)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Visible: =varLocationSearchVisible
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblLocation.Y + lblLocation.Height + 4
+                              - galLocationSearch:
+                                  Control: Gallery@2.15.0
+                                  Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
+                                  Properties:
+                                    BorderColor: =RGBA(200, 200, 200, 1)
+                                    BorderThickness: =1
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Height: =Min(CountRows(galLocationSearch.AllItems) * 40, 200)
+                                    Items: |-
+                                      =If(
+                                          Len(txtLocationSearch.Text) >= 2,
+                                          Table(
+                                              {Value: "-- Other --"},
+                                              Filter(
+                                                  Distinct(
+                                                      Filter(
+                                                          Calibrate_Audit_Data,
+                                                          !IsBlank(Location) && Location <> "" && Trim(Location) <> ""
+                                                      ),
+                                                      Location
+                                                  ),
+                                                  StartsWith(Value, txtLocationSearch.Text)
+                                              )
+                                          ),
+                                          Blank()
+                                      )
+                                    TemplateSize: =40
+                                    Visible: =varLocationSearchVisible && Len(txtLocationSearch.Text) >= 2
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =txtLocationSearch.Y + txtLocationSearch.Height
+                                  Children:
+                                    - rectGalLocationBg:
+                                        Control: Rectangle@2.3.0
+                                        Properties:
+                                          Fill: =If(ThisItem.IsSelected, RGBA(235, 244, 250, 1), RGBA(255, 255, 255, 1))
+                                          Height: =40
+                                          Width: =Parent.Width
+                                    - rectGalLocationDivider:
+                                        Control: Rectangle@2.3.0
+                                        Properties:
+                                          Fill: =RGBA(237, 235, 233, 1)
+                                          Height: =1
+                                          Width: =Parent.Width
+                                          Y: =39
+                                    - lblGalLocationName:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Color: =cNavy
+                                          Font: =gFont
+                                          FontWeight: =FontWeight.Semibold
+                                          PaddingLeft: =12
+                                          Text: =ThisItem.Value
+                                          Width: =Parent.Width
+                                    - btnGalLocationSelect:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =RGBA(0, 0, 0, 0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =RGBA(0, 0, 0, 0)
+                                          Fill: =RGBA(0, 0, 0, 0)
+                                          HoverColor: =RGBA(0, 0, 0, 0)
+                                          HoverFill: =RGBA(235, 244, 250, 0.6)
+                                          OnSelect: |-
+                                            =Set(varSelectedLocation, ThisItem);
+                                            Set(varLocationSearchVisible, false);
+                                            Set(varLocationSearchText, "");
+                                            Set(varPriorRecordsExist,
+                                                CountRows(
+                                                    Filter(
+                                                        Calibrate_Audit_Data,
+                                                        Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
+                                                        Location = If(ThisItem.Value = "-- Other --", txtLocationOther.Text, ThisItem.Value)
+                                                    )
+                                                ) > 0
+                                            );
+                                            Set(varSelectedLineNumber, Blank());
+                                            Set(varSelectedSerialNumber, Blank());
+                                            Set(varSelectedLotBatch, Blank());
+                                            Set(varSelectedBoxCarton, Blank());
+                                            Set(varSelectedRollNumber, Blank());
+                                            Set(varSelectedBagWidth, Blank());
+                                            Set(varSelectedBagLength, Blank())
+                                          PressedFill: =RGBA(210, 228, 240, 0.8)
+                                          Text: =""
+                                          Width: =Parent.Width
+                              - txtLocationOther:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: ="Other Location"
+                                    Default: |-
+                                      =If(
+                                          varEditMode,
+                                          varSelectedAudit.Location,
+                                          ""
+                                      )
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter location..."
+                                    Size: =0
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: ="None"
+                                    Visible: =varSelectedLocation.Value = "-- Other --"
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblLocationSelected.Y + lblLocationSelected.Height + 4
+                        - crdAuditDate:
+                            Control: TypedDataCard@1.0.7
+                            Variant: DateEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Audit_Date"
+                              Default: =ThisItem.Audit_Date
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Audit_Date)
+                              Required: =false
+                              Update: =dteAudit.SelectedDate
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =2
+                            Children:
+                              - lblAuditDate:
+                                  Control: ModernText@1.0.0
+                                  Properties:
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =23
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =16
+                                    Text: ="Audit Date"
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - dteAudit:
+                                  Control: Classic/DatePicker@2.6.0
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    DefaultDate: |-
+                                      =If(
+                                          varEditMode,
+                                          Parent.Default,
+                                          Today()
+                                      )
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Height: =38
+                                    IconBackground: =cNavy
+                                    IconFill: =cWhite
+                                    InputTextPlaceholder: ="Select a date..."
+                                    Width: =lblCustomerSelected.Width
+                                    X: =24
+                                    Y: =lblAuditDate.Y + lblAuditDate.Height + 4
+                        - crdAuditType:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Audit_Type"
+                              Default: =ThisItem.Audit_Type
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Audit_Type)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Audit_Type)
+                              Required: =false
+                              Update: =If(cmbAuditType.Selected.Value = "-- Other --", txtAuditTypeOther.Text, cmbAuditType.Selected.Value)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =2
+                            Children:
+                              - lblAuditType:
+                                  Control: ModernText@1.0.0
+                                  Properties:
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =23
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =16
+                                    Text: ="Audit Type"
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - cmbAuditType:
+                                  Control: ModernCombobox@1.1.0
+                                  Properties:
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode,
+                                          Filter(["Pack Station / In-Line","24 Hr Hold","Extended Hold","Transportation","Rework","-- Other --"], Value = varSelectedAudit.Audit_Type),
+                                          Blank()
+                                      )
+                                    InputTextPlaceholder: ="Select audit type..."
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: =["Pack Station / In-Line","24 Hr Hold","Extended Hold","Transportation","Rework","-- Other --"]
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =lblAuditType.Y + lblAuditType.Height + 4
+                              - txtAuditTypeOther:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: ="Other Audit Type"
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Describe audit type..."
+                                    Size: =0
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: ="None"
+                                    Visible: =cmbAuditType.Selected.Value = "-- Other --"
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =cmbAuditType.Y + cmbAuditType.Height + 4
+                        - crdAuditTypeDetail:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Audit_Type_Detail"
+                              Default: =ThisItem.Audit_Type_Detail
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Audit_Type_Detail)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Audit_Type_Detail)
+                              Required: =false
+                              Update: =txtAuditTypeDetail.Text
+                              Visible: =cmbAuditType.Selected.Value = "Extended Hold" || cmbAuditType.Selected.Value = "Transportation"
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =3
+                            Children:
+                              - lblAuditTypeDetail:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =22
+                                    Text: =If(cmbAuditType.Selected.Value = "Transportation", "Transportation Details (temps, miles)", "Storage Conditions")
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtAuditTypeDetail:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: =Parent.DisplayName
+                                    Default: =Parent.Default
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    Height: =50
+                                    MaxLength: =-1
+                                    Placeholder: =If(cmbAuditType.Selected.Value = "Transportation", "e.g. 34F, 250 miles", "e.g. 34F, 3 days")
+                                    Required: =Parent.Required
+                                    Size: =0
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    Type: =TextInputType.Multiline
+                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblAuditTypeDetail.Y + lblAuditTypeDetail.Height + 4
+                        - crdAuditDesc:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Audit Desc"
+                              Default: =""
+                              DisplayName: ="Audit Description"
+                              MaxLength: =4000
+                              Required: =false
+                              Update: =txtAuditDesc.Text
+                              Visible: =true
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =3
+                            Children:
+                              - lblAuditDesc:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =22
+                                    Text: ="Audit Description"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtAuditDesc:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: ="Audit Description"
+                                    Default: =If(varEditMode, varSelectedAudit.'Audit Desc', "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    Height: =96
+                                    MaxLength: =-1
+                                    Placeholder: ="Describe the audit..."
+                                    Required: =false
+                                    Size: =0
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    Type: =TextInputType.Multiline
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblAuditDesc.Y + lblAuditDesc.Height + 4
+                        - crdProtein:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Protein"
+                              Default: =ThisItem.Protein
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Protein)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Protein)
+                              Required: =false
+                              Update: =If(cmbProtein.Selected.Value = "-- Other --", txtProteinOther.Text, cmbProtein.Selected.Value)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =4
+                            Children:
+                              - lblProtein:
+                                  Control: ModernText@1.0.0
+                                  Properties:
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =23
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =16
+                                    Text: =Parent.DisplayName
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - cmbProtein:
+                                  Control: ModernCombobox@1.1.0
+                                  Properties:
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode,
+                                          Filter(Distinct(Audit_Bag_List, Title), Value = varSelectedAudit.Protein),
+                                          Blank()
+                                      )
+                                    InputTextPlaceholder: ="Select protein..."
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: |-
+                                      =Table(
+                                          Sort(Distinct(Audit_Bag_List, Title), Value, SortOrder.Ascending),
+                                          {Value: "-- Other --"}
+                                      )
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =lblProtein.Y + lblProtein.Height + 4
+                              - txtProteinOther:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: ="Other Protein"
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter protein..."
+                                    Size: =0
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: ="None"
+                                    Visible: =cmbProtein.Selected.Value = "-- Other --"
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =cmbProtein.Y + cmbProtein.Height + 4
+                        - crdVendor:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Vendor"
+                              Default: =ThisItem.Vendor
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Vendor)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Vendor)
+                              Required: =false
+                              Update: =If(cmbVendor.Selected.Value = "-- Other --", txtVendorOther.Text, cmbVendor.Selected.Value)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =4
+                            Children:
+                              - lblVendor:
+                                  Control: ModernText@1.0.0
+                                  Properties:
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =23
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =16
+                                    Text: =Parent.DisplayName
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - cmbVendor:
+                                  Control: ModernCombobox@1.1.0
+                                  Properties:
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode,
+                                          Filter(Distinct(Filter(Audit_Bag_List, Title = cmbProtein.Selected.Value), Vendor), Value = varSelectedAudit.Vendor),
+                                          Blank()
+                                      )
+                                    InputTextPlaceholder: ="Select vendor..."
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: |-
+                                      =If(
+                                          IsBlank(cmbProtein.Selected.Value),
+                                          Table({Value: "-- Other --"}),
+                                          Table(
+                                              Sort(
+                                                  Distinct(
+                                                      Filter(
+                                                          Audit_Bag_List,
+                                                          cmbProtein.Selected.Value = "-- Other --" || Title = cmbProtein.Selected.Value
+                                                      ),
+                                                      Vendor
+                                                  ),
+                                                  Value,
+                                                  SortOrder.Ascending
+                                              ),
+                                              {Value: "-- Other --"}
+                                          )
+                                      )
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =lblVendor.Y + lblVendor.Height + 4
+                              - txtVendorOther:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: ="Other Vendor"
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter vendor..."
+                                    Size: =0
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: ="None"
+                                    Visible: =cmbVendor.Selected.Value = "-- Other --"
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =cmbVendor.Y + cmbVendor.Height + 4
+                        - crdCut:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Cut"
+                              Default: =ThisItem.Cut
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Cut)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Cut)
+                              Required: =false
+                              Update: =If(cmbCut.Selected.Value = "-- Other --", txtCutOther.Text, cmbCut.Selected.Value)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =5
+                            Children:
+                              - lblCut:
+                                  Control: ModernText@1.0.0
+                                  Properties:
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =23
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =16
+                                    Text: =Parent.DisplayName
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - cmbCut:
+                                  Control: ModernCombobox@1.1.0
+                                  Properties:
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode,
+                                          Filter(Distinct(Filter(Audit_Bag_List, Title = cmbProtein.Selected.Value && Vendor = cmbVendor.Selected.Value), Cut), Value = varSelectedAudit.Cut),
+                                          Blank()
+                                      )
+                                    InputTextPlaceholder: ="Select cut..."
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: |-
+                                      =If(
+                                          IsBlank(cmbProtein.Selected.Value) || IsBlank(cmbVendor.Selected.Value),
+                                          Table({Value: "-- Other --"}),
+                                          Table(
+                                              Sort(
+                                                  Distinct(
+                                                      Filter(
+                                                          Audit_Bag_List,
+                                                          (cmbProtein.Selected.Value = "-- Other --" || Title = cmbProtein.Selected.Value) &&
+                                                          (cmbVendor.Selected.Value = "-- Other --" || Vendor = cmbVendor.Selected.Value)
+                                                      ),
+                                                      Cut
+                                                  ),
+                                                  Value,
+                                                  SortOrder.Ascending
+                                              ),
+                                              {Value: "-- Other --"}
+                                          )
+                                      )
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =lblCut.Y + lblCut.Height + 4
+                              - txtCutOther:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: ="Other Cut"
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter cut..."
+                                    Size: =0
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: ="None"
+                                    Visible: =cmbCut.Selected.Value = "-- Other --"
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =cmbCut.Y + cmbCut.Height + 4
+                        - crdBag:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Bag"
+                              Default: =ThisItem.Bag
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Bag)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Bag)
+                              Required: =false
+                              Update: =If(cmbBag.Selected.Value = "-- Other --", txtBagOther.Text, cmbBag.Selected.Value)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =5
+                            Children:
+                              - lblBag:
+                                  Control: ModernText@1.0.0
+                                  Properties:
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =23
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =16
+                                    Text: =Parent.DisplayName
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - cmbBag:
+                                  Control: ModernCombobox@1.1.0
+                                  Properties:
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode,
+                                          Filter(Distinct(Filter(Audit_Bag_List, Title = cmbProtein.Selected.Value && Vendor = cmbVendor.Selected.Value && Cut = cmbCut.Selected.Value), 'Bag 1 '), Value = varSelectedAudit.Bag),
+                                          Blank()
+                                      )
+                                    InputTextPlaceholder: ="Select bag..."
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: |-
+                                      =If(
+                                          IsBlank(cmbProtein.Selected.Value) || IsBlank(cmbVendor.Selected.Value) || IsBlank(cmbCut.Selected.Value),
+                                          Table({Value: "-- Other --"}),
+                                          Table(
+                                              Sort(
+                                                  Distinct(
+                                                      Filter(
+                                                          Audit_Bag_List,
+                                                          (cmbProtein.Selected.Value = "-- Other --" || Title = cmbProtein.Selected.Value) &&
+                                                          (cmbVendor.Selected.Value = "-- Other --" || Vendor = cmbVendor.Selected.Value) &&
+                                                          (cmbCut.Selected.Value = "-- Other --" || Cut = cmbCut.Selected.Value)
+                                                      ),
+                                                      'Bag 1 '
+                                                  ),
+                                                  Value,
+                                                  SortOrder.Ascending
+                                              ),
+                                              Sort(
+                                                  Distinct(
+                                                      Filter(
+                                                          Calibrate_Audit_Data,
+                                                          Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
+                                                          Location = If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value) &&
+                                                          !IsBlank(Bag) && Bag <> ""
+                                                      ),
+                                                      Bag
+                                                  ),
+                                                  Value,
+                                                  SortOrder.Ascending
+                                              ),
+                                              {Value: "-- Other --"}
+                                          )
+                                      )
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =lblBag.Y + lblBag.Height + 4
+                              - txtBagOther:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: ="Other Bag"
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter bag..."
+                                    Size: =0
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: ="None"
+                                    Visible: =cmbBag.Selected.Value = "-- Other --"
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =cmbBag.Y + cmbBag.Height + 4
+                        - crdProductType:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Product_Type"
+                              Default: =ThisItem.Product_Type
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Product_Type)
+                              Height: =80
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Product_Type)
+                              Required: =false
+                              Update: =cmbProductType.Selected.Value
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =6
+                            Children:
+                              - lblProductType:
+                                  Control: ModernText@1.0.0
+                                  Properties:
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =23
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =16
+                                    Text: ="Product Type"
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - cmbProductType:
+                                  Control: ModernCombobox@1.1.0
+                                  Properties:
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode,
+                                          Filter(["Pre-Cut Bags","Tubestock","Flat Film","-- Other --"], Value = varSelectedAudit.Product_Type),
+                                          Blank()
+                                      )
+                                    InputTextPlaceholder: ="Select product type..."
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: =["Pre-Cut Bags","Tubestock","Flat Film","-- Other --"]
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =lblProductType.Y + lblProductType.Height + 4
+                        - crdNotListedProductInfo:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Not_Listed_Product_Info"
+                              Default: =ThisItem.Not_Listed_Product_Info
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Not_Listed_Product_Info)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Not_Listed_Product_Info)
+                              Required: =false
+                              Update: =txtNotListedProductInfo.Text
+                              Visible: =cmbProductType.Selected.Value = "-- Other --"
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =6
+                            Children:
+                              - lblNotListedProductInfo:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =22
+                                    Text: ="Not Listed Product Info"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtNotListedProductInfo:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: =Parent.DisplayName
+                                    Default: =Parent.Default
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    Height: =50
+                                    MaxLength: =-1
+                                    Placeholder: ="If product is not listed above, describe it here..."
+                                    Required: =Parent.Required
+                                    Size: =0
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    Type: =TextInputType.Multiline
+                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblNotListedProductInfo.Y + lblNotListedProductInfo.Height + 4
+                        - crdProductIdentificationHeader:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualView
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="{Identifier}"
+                              Default: =ThisItem.Identifier
+                              DisplayName: =""
+                              Height: =41
+                              Required: =false
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =7
+                            Children:
+                              - rectProdIdHeaderBg:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    Fill: =RGBA(250, 250, 250, 1)
+                                    Height: =40
+                                    Width: =Parent.Width
+                              - rectProdIdHeaderBorder:
+                                  Control: Rectangle@2.3.0
+                                  Properties:
+                                    Fill: =RGBA(0, 57, 90, 1)
+                                    Height: =2
+                                    Width: =Parent.Width
+                                    Y: =39
+                              - lblProdIdHeaderText:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0, 0, 0, 0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(0, 57, 90, 1)
+                                    Font: =gFont
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =39
+                                    PaddingLeft: =16
+                                    Size: =14
+                                    Text: ="EQUIPMENT/MATERIAL"
+                                    Width: =Parent.Width
+                        - crdLineNumber:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Machine_Line_Number"
+                              Default: =ThisItem.Machine_Line_Number
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Machine_Line_Number)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Machine_Line_Number)
+                              Required: =false
+                              Update: =If(varPriorRecordsExist, If(varSelectedLineNumber.Value = "-- Other --", txtMachineLineNum.Text, varSelectedLineNumber.Value), txtMachineLineNum.Text)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =8
+                            Children:
+                              - lblLineNumber:
+                                  Control: ModernText@1.0.0
+                                  Properties:
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =23
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =16
+                                    Text: |-
+                                      ="Line #"
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - cmbLineNumber:
+                                  Control: ModernCombobox@1.1.0
+                                  Properties:
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode && varPriorRecordsExist && !IsBlank(varSelectedAudit.Machine_Line_Number),
+                                          If(
+                                              CountRows(
+                                                  Filter(
+                                                      Distinct(
+                                                          Filter(
+                                                              Calibrate_Audit_Data,
+                                                              Customer = varSelectedAudit.Customer &&
+                                                              Location = varSelectedAudit.Location &&
+                                                              !IsBlank(Machine_Line_Number) && Machine_Line_Number <> ""
+                                                          ),
+                                                          Machine_Line_Number
+                                                      ),
+                                                      Value = varSelectedAudit.Machine_Line_Number
+                                                  )
+                                              ) > 0,
+                                              Table({Value: varSelectedAudit.Machine_Line_Number}),
+                                              Table({Value: "-- Other --"})
+                                          ),
+                                          Blank()
+                                      )
+                                    InputTextPlaceholder: ="Select line number..."
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: |-
+                                      =Table(
+                                          Sort(
+                                              Distinct(
+                                                  Filter(
+                                                      Calibrate_Audit_Data,
+                                                      Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
+                                                      Location = If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value) &&
+                                                      !IsBlank(Machine_Line_Number) && Machine_Line_Number <> ""
+                                                  ),
+                                                  Machine_Line_Number
+                                              ),
+                                              Value,
+                                              SortOrder.Ascending
+                                          ),
+                                          {Value: "-- Other --"}
+                                      )
+                                    OnChange: =Set(varSelectedLineNumber, Self.Selected)
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Visible: =varPriorRecordsExist
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =lblLineNumber.Y + lblLineNumber.Height + 4
+                              - txtMachineLineNum:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: =Parent.DisplayName
+                                    Default: |-
+                                      =If(
+                                          varEditMode,
+                                          If(
+                                              varPriorRecordsExist && varSelectedLineNumber.Value = "-- Other --",
+                                              If(
+                                                  CountRows(
+                                                      Filter(
+                                                          Distinct(
+                                                              Filter(
+                                                                  Calibrate_Audit_Data,
+                                                                  Customer = varSelectedAudit.Customer &&
+                                                                  Location = varSelectedAudit.Location &&
+                                                                  !IsBlank(Machine_Line_Number) && Machine_Line_Number <> ""
+                                                              ),
+                                                              Machine_Line_Number
+                                                          ),
+                                                          Value = varSelectedAudit.Machine_Line_Number
+                                                      )
+                                                  ) = 0,
+                                                  varSelectedAudit.Machine_Line_Number,
+                                                  ""
+                                              ),
+                                              If(!varPriorRecordsExist, varSelectedAudit.Machine_Line_Number, "")
+                                          ),
+                                          ""
+                                      )
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter line number..."
+                                    Required: =Parent.Required
+                                    Size: =18
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
+                                    Visible: =!varPriorRecordsExist || varSelectedLineNumber.Value = "-- Other --"
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =If(varPriorRecordsExist, cmbLineNumber.Y + cmbLineNumber.Height + 4, lblLineNumber.Y + lblLineNumber.Height + 4)
+                        - crdSerialNumber:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Machine_Serial_Number"
+                              Default: =ThisItem.Machine_Serial_Number
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Machine_Serial_Number)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Machine_Serial_Number)
+                              Required: =false
+                              Update: =If(varPriorRecordsExist, If(varSelectedSerialNumber.Value = "-- Other --", txtSerialNum.Text, varSelectedSerialNumber.Value), txtSerialNum.Text)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =8
+                            Children:
+                              - lblSerialNumber:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: |-
+                                      ="Serial #"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - cmbSerialNumber:
+                                  Control: ModernCombobox@1.1.0
+                                  Properties:
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode && varPriorRecordsExist && !IsBlank(varSelectedAudit.Machine_Serial_Number),
+                                          If(
+                                              CountRows(
+                                                  Filter(
+                                                      Distinct(
+                                                          Filter(
+                                                              Calibrate_Audit_Data,
+                                                              Customer = varSelectedAudit.Customer &&
+                                                              Location = varSelectedAudit.Location &&
+                                                              !IsBlank(Machine_Serial_Number) && Machine_Serial_Number <> ""
+                                                          ),
+                                                          Machine_Serial_Number
+                                                      ),
+                                                      Value = varSelectedAudit.Machine_Serial_Number
+                                                  )
+                                              ) > 0,
+                                              Table({Value: varSelectedAudit.Machine_Serial_Number}),
+                                              Table({Value: "-- Other --"})
+                                          ),
+                                          Blank()
+                                      )
+                                    InputTextPlaceholder: ="Select serial number..."
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: |-
+                                      =Table(
+                                          Sort(
+                                              Distinct(
+                                                  Filter(
+                                                      Calibrate_Audit_Data,
+                                                      Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
+                                                      Location = If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value) &&
+                                                      !IsBlank(Machine_Serial_Number) && Machine_Serial_Number <> ""
+                                                  ),
+                                                  Machine_Serial_Number
+                                              ),
+                                              Value,
+                                              SortOrder.Ascending
+                                          ),
+                                          {Value: "-- Other --"}
+                                      )
+                                    OnChange: =Set(varSelectedSerialNumber, Self.Selected)
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Visible: =varPriorRecordsExist
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =lblSerialNumber.Y + lblSerialNumber.Height + 4
+                              - txtSerialNum:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: =Parent.DisplayName
+                                    Default: |-
+                                      =If(
+                                          varEditMode,
+                                          If(
+                                              varPriorRecordsExist && varSelectedSerialNumber.Value = "-- Other --",
+                                              If(
+                                                  CountRows(
+                                                      Filter(
+                                                          Distinct(
+                                                              Filter(
+                                                                  Calibrate_Audit_Data,
+                                                                  Customer = varSelectedAudit.Customer &&
+                                                                  Location = varSelectedAudit.Location &&
+                                                                  !IsBlank(Machine_Serial_Number) && Machine_Serial_Number <> ""
+                                                              ),
+                                                              Machine_Serial_Number
+                                                          ),
+                                                          Value = varSelectedAudit.Machine_Serial_Number
+                                                      )
+                                                  ) = 0,
+                                                  varSelectedAudit.Machine_Serial_Number,
+                                                  ""
+                                              ),
+                                              If(!varPriorRecordsExist, varSelectedAudit.Machine_Serial_Number, "")
+                                          ),
+                                          ""
+                                      )
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter serial number..."
+                                    Required: =Parent.Required
+                                    Size: =18
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
+                                    Visible: =!varPriorRecordsExist || varSelectedSerialNumber.Value = "-- Other --"
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =If(varPriorRecordsExist, cmbSerialNumber.Y + cmbSerialNumber.Height + 4, lblSerialNumber.Y + lblSerialNumber.Height + 4)
+                        - crdLotBatch:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Lot_Batch_Number"
+                              Default: =ThisItem.Lot_Batch_Number
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Lot_Batch_Number)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Lot_Batch_Number)
+                              Required: =false
+                              Update: =If(varPriorRecordsExist, If(varSelectedLotBatch.Value = "-- Other --", txtBatchLot.Text, varSelectedLotBatch.Value), txtBatchLot.Text)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =9
+                            Children:
+                              - lblLotBatch:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Lot / Batch"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - cmbLotBatch:
+                                  Control: ModernCombobox@1.1.0
+                                  Properties:
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode && varPriorRecordsExist && !IsBlank(varSelectedAudit.Lot_Batch_Number),
+                                          If(
+                                              CountRows(
+                                                  Filter(
+                                                      Distinct(
+                                                          Filter(
+                                                              Calibrate_Audit_Data,
+                                                              Customer = varSelectedAudit.Customer &&
+                                                              Location = varSelectedAudit.Location &&
+                                                              !IsBlank(Lot_Batch_Number) && Lot_Batch_Number <> ""
+                                                          ),
+                                                          Lot_Batch_Number
+                                                      ),
+                                                      Value = varSelectedAudit.Lot_Batch_Number
+                                                  )
+                                              ) > 0,
+                                              Table({Value: varSelectedAudit.Lot_Batch_Number}),
+                                              Table({Value: "-- Other --"})
+                                          ),
+                                          Blank()
+                                      )
+                                    InputTextPlaceholder: ="Select lot / batch..."
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: |-
+                                      =Table(
+                                          Sort(
+                                              Distinct(
+                                                  Filter(
+                                                      Calibrate_Audit_Data,
+                                                      Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
+                                                      Location = If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value) &&
+                                                      !IsBlank(Lot_Batch_Number) && Lot_Batch_Number <> ""
+                                                  ),
+                                                  Lot_Batch_Number
+                                              ),
+                                              Value,
+                                              SortOrder.Ascending
+                                          ),
+                                          {Value: "-- Other --"}
+                                      )
+                                    OnChange: =Set(varSelectedLotBatch, Self.Selected)
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Visible: =varPriorRecordsExist
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =lblLotBatch.Y + lblLotBatch.Height + 4
+                              - txtBatchLot:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: =Parent.DisplayName
+                                    Default: |-
+                                      =If(
+                                          varEditMode,
+                                          If(
+                                              varPriorRecordsExist && varSelectedLotBatch.Value = "-- Other --",
+                                              If(
+                                                  CountRows(
+                                                      Filter(
+                                                          Distinct(
+                                                              Filter(
+                                                                  Calibrate_Audit_Data,
+                                                                  Customer = varSelectedAudit.Customer &&
+                                                                  Location = varSelectedAudit.Location &&
+                                                                  !IsBlank(Lot_Batch_Number) && Lot_Batch_Number <> ""
+                                                              ),
+                                                              Lot_Batch_Number
+                                                          ),
+                                                          Value = varSelectedAudit.Lot_Batch_Number
+                                                      )
+                                                  ) = 0,
+                                                  varSelectedAudit.Lot_Batch_Number,
+                                                  ""
+                                              ),
+                                              If(!varPriorRecordsExist, varSelectedAudit.Lot_Batch_Number, "")
+                                          ),
+                                          ""
+                                      )
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter lot or batch number..."
+                                    Required: =Parent.Required
+                                    Size: =18
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
+                                    Visible: =!varPriorRecordsExist || varSelectedLotBatch.Value = "-- Other --"
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =If(varPriorRecordsExist, cmbLotBatch.Y + cmbLotBatch.Height + 4, lblLotBatch.Y + lblLotBatch.Height + 4)
+                        - crdBoxCarton:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Box_Carton_Number"
+                              Default: =ThisItem.Box_Carton_Number
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Box_Carton_Number)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Box_Carton_Number)
+                              Required: =false
+                              Update: =If(varPriorRecordsExist, If(varSelectedBoxCarton.Value = "-- Other --", txtCarton.Text, varSelectedBoxCarton.Value), txtCarton.Text)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =9
+                            Children:
+                              - lblBoxCarton:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: |-
+                                      ="Material #"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - cmbBoxCarton:
+                                  Control: ModernCombobox@1.1.0
+                                  Properties:
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode && varPriorRecordsExist && !IsBlank(varSelectedAudit.Box_Carton_Number),
+                                          If(
+                                              CountRows(
+                                                  Filter(
+                                                      Distinct(
+                                                          Filter(
+                                                              Calibrate_Audit_Data,
+                                                              Customer = varSelectedAudit.Customer &&
+                                                              Location = varSelectedAudit.Location &&
+                                                              !IsBlank(Box_Carton_Number) && Box_Carton_Number <> ""
+                                                          ),
+                                                          Box_Carton_Number
+                                                      ),
+                                                      Value = varSelectedAudit.Box_Carton_Number
+                                                  )
+                                              ) > 0,
+                                              Table({Value: varSelectedAudit.Box_Carton_Number}),
+                                              Table({Value: "-- Other --"})
+                                          ),
+                                          Blank()
+                                      )
+                                    InputTextPlaceholder: ="Select box / carton..."
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: |-
+                                      =Table(
+                                          Sort(
+                                              Distinct(
+                                                  Filter(
+                                                      Calibrate_Audit_Data,
+                                                      Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
+                                                      Location = If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value) &&
+                                                      !IsBlank(Box_Carton_Number) && Box_Carton_Number <> ""
+                                                  ),
+                                                  Box_Carton_Number
+                                              ),
+                                              Value,
+                                              SortOrder.Ascending
+                                          ),
+                                          {Value: "-- Other --"}
+                                      )
+                                    OnChange: =Set(varSelectedBoxCarton, Self.Selected)
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Visible: =varPriorRecordsExist
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =lblBoxCarton.Y + lblBoxCarton.Height + 4
+                              - txtCarton:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: =Parent.DisplayName
+                                    Default: |-
+                                      =If(
+                                          varEditMode,
+                                          If(
+                                              varPriorRecordsExist && varSelectedBoxCarton.Value = "-- Other --",
+                                              If(
+                                                  CountRows(
+                                                      Filter(
+                                                          Distinct(
+                                                              Filter(
+                                                                  Calibrate_Audit_Data,
+                                                                  Customer = varSelectedAudit.Customer &&
+                                                                  Location = varSelectedAudit.Location &&
+                                                                  !IsBlank(Box_Carton_Number) && Box_Carton_Number <> ""
+                                                              ),
+                                                              Box_Carton_Number
+                                                          ),
+                                                          Value = varSelectedAudit.Box_Carton_Number
+                                                      )
+                                                  ) = 0,
+                                                  varSelectedAudit.Box_Carton_Number,
+                                                  ""
+                                              ),
+                                              If(!varPriorRecordsExist, varSelectedAudit.Box_Carton_Number, "")
+                                          ),
+                                          ""
+                                      )
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: |-
+                                      ="Enter Amcor Material #..."
+                                    Required: =Parent.Required
+                                    Size: =18
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
+                                    Visible: =!varPriorRecordsExist || varSelectedBoxCarton.Value = "-- Other --"
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =If(varPriorRecordsExist, cmbBoxCarton.Y + cmbBoxCarton.Height + 4, lblBoxCarton.Y + lblBoxCarton.Height + 4)
+                        - crdRollNumber:
+                            Control: TypedDataCard@1.0.7
+                            Variant: TextualEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="Roll_Number"
+                              Default: =ThisItem.Roll_Number
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,Roll_Number)
+                              MaxLength: =DataSourceInfo([@Calibrate_Audit_Data], DataSourceInfo.MaxLength, Roll_Number)
+                              Required: =false
+                              Update: =If(varPriorRecordsExist, If(varSelectedRollNumber.Value = "-- Other --", txtRoll.Text, varSelectedRollNumber.Value), txtRoll.Text)
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =10
+                            Children:
+                              - lblRollNumber:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: |-
+                                      ="Roll #"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - cmbRollNumber:
+                                  Control: ModernCombobox@1.1.0
+                                  Properties:
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          varEditMode && varPriorRecordsExist && !IsBlank(varSelectedAudit.Roll_Number),
+                                          If(
+                                              CountRows(
+                                                  Filter(
+                                                      Distinct(
+                                                          Filter(
+                                                              Calibrate_Audit_Data,
+                                                              Customer = varSelectedAudit.Customer &&
+                                                              Location = varSelectedAudit.Location &&
+                                                              !IsBlank(Roll_Number) && Roll_Number <> ""
+                                                          ),
+                                                          Roll_Number
+                                                      ),
+                                                      Value = varSelectedAudit.Roll_Number
+                                                  )
+                                              ) > 0,
+                                              Table({Value: varSelectedAudit.Roll_Number}),
+                                              Table({Value: "-- Other --"})
+                                          ),
+                                          Blank()
+                                      )
+                                    InputTextPlaceholder: ="Select roll number..."
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: |-
+                                      =Table(
+                                          Sort(
+                                              Distinct(
+                                                  Filter(
+                                                      Calibrate_Audit_Data,
+                                                      Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
+                                                      Location = If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value) &&
+                                                      !IsBlank(Roll_Number) && Roll_Number <> ""
+                                                  ),
+                                                  Roll_Number
+                                              ),
+                                              Value,
+                                              SortOrder.Ascending
+                                          ),
+                                          {Value: "-- Other --"}
+                                      )
+                                    OnChange: =Set(varSelectedRollNumber, Self.Selected)
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Visible: =varPriorRecordsExist
+                                    Width: =Parent.Width - 32
+                                    X: =24
+                                    Y: =lblRollNumber.Y + lblRollNumber.Height + 4
+                              - txtRoll:
+                                  Control: ModernTextInput@1.0.0
+                                  Properties:
+                                    AccessibleLabel: =Parent.DisplayName
+                                    Default: |-
+                                      =If(
+                                          varEditMode,
+                                          If(
+                                              varPriorRecordsExist && varSelectedRollNumber.Value = "-- Other --",
+                                              If(
+                                                  CountRows(
+                                                      Filter(
+                                                          Distinct(
+                                                              Filter(
+                                                                  Calibrate_Audit_Data,
+                                                                  Customer = varSelectedAudit.Customer &&
+                                                                  Location = varSelectedAudit.Location &&
+                                                                  !IsBlank(Roll_Number) && Roll_Number <> ""
+                                                              ),
+                                                              Roll_Number
+                                                          ),
+                                                          Value = varSelectedAudit.Roll_Number
+                                                      )
+                                                  ) = 0,
+                                                  varSelectedAudit.Roll_Number,
+                                                  ""
+                                              ),
+                                              If(!varPriorRecordsExist, varSelectedAudit.Roll_Number, "")
+                                          ),
+                                          ""
+                                      )
+                                    DisplayMode: =Parent.DisplayMode
+                                    FontWeight: =""
+                                    MaxLength: =-1
+                                    Placeholder: ="Enter roll number..."
+                                    Required: =Parent.Required
+                                    Size: =18
+                                    TriggerOutput: =TriggerOutput.FocusOut
+                                    ValidationState: =If(IsBlank(Parent.Error), "None", "Error")
+                                    Visible: =!varPriorRecordsExist || varSelectedRollNumber.Value = "-- Other --"
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =If(varPriorRecordsExist, cmbRollNumber.Y + cmbRollNumber.Height + 4, lblRollNumber.Y + lblRollNumber.Height + 4)
+                        - crdBagWidth:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Bag_Width"
+                              Default: =ThisItem.MS_Bag_Width
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,MS_Bag_Width)
+                              Required: =false
+                              Update: =If(IsBlank(txtBagWidth.Text) || txtBagWidth.Text = "", 0, Value(txtBagWidth.Text))
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =1
+                              Y: =10
+                            Children:
+                              - lblBagWidth:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Bag Width"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtBagWidth:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblBagWidth.Y + lblBagWidth.Height + 4
+                        - crdBagLength:
+                            Control: TypedDataCard@1.0.7
+                            Variant: NumberEdit
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              DataField: ="MS_Bag_Length"
+                              Default: =ThisItem.MS_Bag_Length
+                              DisplayName: =DataSourceInfo([@Calibrate_Audit_Data],DataSourceInfo.DisplayName,MS_Bag_Length)
+                              Required: =false
+                              Update: =If(IsBlank(txtBagLength.Text) || txtBagLength.Text = "", 0, Value(txtBagLength.Text))
+                              Width: =If(Parent.Width > 600, (Parent.Width / 2) - 16, Parent.Width)
+                              WidthFit: =true
+                              X: =0
+                              Y: =11
+                            Children:
+                              - lblBagLength:
+                                  Control: Text@0.0.51
+                                  Properties:
+                                    Height: =23
+                                    Size: =16
+                                    Text: ="Bag Length"
+                                    Weight: ='TextCanvas.Weight'.Semibold
+                                    Width: =Parent.Width - 48
+                                    Wrap: =false
+                                    X: =24
+                                    Y: =10
+                              - txtBagLength:
+                                  Control: Classic/TextInput@2.3.2
+                                  Properties:
+                                    BorderColor: =RGBA(229, 229, 229, 1)
+                                    BorderThickness: =1
+                                    Color: =cText
+                                    Default: =If(varEditMode, If(IsBlank(Parent.Default) || Parent.Default = 0, "", Text(Parent.Default)), "")
+                                    DisplayMode: =Parent.DisplayMode
+                                    Fill: =RGBA(248, 248, 248, 1)
+                                    Font: =gFont
+                                    Format: =TextFormat.Number
+                                    Height: =38
+                                    HintText: ="0"
+                                    HoverBorderColor: =cNavy
+                                    HoverFill: =RGBA(245, 248, 252, 1)
+                                    RadiusBottomLeft: =4
+                                    RadiusBottomRight: =4
+                                    RadiusTopLeft: =4
+                                    RadiusTopRight: =4
+                                    Size: =18
+                                    Width: =Parent.Width - 48
+                                    X: =24
+                                    Y: =lblBagWidth.Y + lblBagWidth.Height + 4
+            - FooterContainer_Customer:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(245, 245, 245, 1)
+                  FillPortions: =0
+                  Height: =60
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutGap: =8
+                  LayoutMinHeight: =44
+                  LayoutMinWidth: =16
+                  PaddingBottom: =8
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PaddingTop: =8
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                Children:
+                  - btnRefresh_Customer:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =cNavy
+                        BorderThickness: =1
+                        Color: =cNavy
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledColor: =RGBA(161, 159, 157, 1)
+                        DisabledFill: =RGBA(242, 242, 241, 0)
+                        Fill: =cWhite
+                        Font: =gFont
+                        Height: =44
+                        HoverBorderColor: =cNavy
+                        HoverColor: =cWhite
+                        HoverFill: =cNavy
+                        OnSelect: |-
+                          =Refresh(Calibrate_Audit_Data);
+                          ClearCollect(colCustomers, Sort(Customers, customer_name, SortOrder.Ascending));
+                          Collect(colCustomers, {customer_name: "-- Other --", customer_nbr: "", customer_location: ""});
+                          Refresh(Audit_Bag_List);
+                          Notify("Data refreshed.", NotificationType.Success)
+                        PressedBorderColor: =cNavy
+                        PressedColor: =cWhite
+                        PressedFill: =RGBA(0, 40, 70, 1)
+                        RadiusBottomLeft: =4
+                        RadiusBottomRight: =4
+                        RadiusTopLeft: =4
+                        RadiusTopRight: =4
+                        Size: =14
+                        Text: ="Refresh"
+                        Width: =(Parent.Width - 32) / 3
+                  - btnClearAll_Customer:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =cRed
+                        BorderThickness: =1
+                        Color: =cRed
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledColor: =RGBA(161, 159, 157, 1)
+                        DisabledFill: =RGBA(242, 242, 241, 0)
+                        Fill: =cWhite
+                        Font: =gFont
+                        Height: =44
+                        HoverBorderColor: =cRed
+                        HoverColor: =cWhite
+                        HoverFill: =cRed
+                        OnSelect: |-
+                          =If(
+                              varEditMode,
+                              Navigate(scrDetail),
+                              ResetForm(frmCustomerInfo);
+                              Set(varSelectedCustomer, Blank());
+                              Set(varCustomerSearchVisible, false);
+                              Set(varCustomerSearchText, "");
+                              Set(varSelectedLocation, Blank());
+                              Set(varLocationSearchVisible, false);
+                              Set(varLocationSearchText, "");
+                              Set(varPriorRecordsExist, false);
+                              Set(varSelectedLineNumber, Blank());
+                              Set(varSelectedSerialNumber, Blank());
+                              Set(varSelectedLotBatch, Blank());
+                              Set(varSelectedBoxCarton, Blank());
+                              Set(varSelectedRollNumber, Blank())
+                          )
+                        PressedBorderColor: =cRed
+                        PressedColor: =cWhite
+                        PressedFill: =RGBA(150, 0, 0, 1)
+                        RadiusBottomLeft: =4
+                        RadiusBottomRight: =4
+                        RadiusTopLeft: =4
+                        RadiusTopRight: =4
+                        Size: =14
+                        Text: =If(varEditMode, "Back", "Clear All")
+                        Width: =(Parent.Width - 32) / 3
+                  - btnNext_Customer:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =cNavy
+                        BorderThickness: =1
+                        Color: =cWhite
+                        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                        DisabledColor: =RGBA(161, 159, 157, 1)
+                        DisabledFill: =RGBA(242, 242, 241, 0)
+                        Fill: =cNavy
+                        Font: =gFont
+                        Height: =44
+                        HoverBorderColor: =cNavy
+                        HoverColor: =cWhite
+                        HoverFill: =RGBA(0, 80, 130, 1)
+                        OnSelect: |-
+                          =/*
+                          Set(varCustomerRecord, {
+                              Title:                   varAuditKey,
+                              Audit_Date:              dteAudit.SelectedDate,
+                              Customer:                If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
+                              Customer_Nbr:            If(varSelectedCustomer.customer_name = "-- Other --", "", varSelectedCustomer.customer_nbr),
+                              Location:                If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value),
+                              Audit_Type:              If(cmbAuditType.Selected.Value = "-- Other --", txtAuditTypeOther.Text, cmbAuditType.Selected.Value),
+                              Audit_Type_Detail:       txtAuditTypeDetail.Text,
+                              Machine_Line_Number:     txtMachineLineNum.Text,
+                              Machine_Serial_Number:   txtSerialNum.Text,
+                              Lot_Batch_Number:        txtBatchLot.Text,
+                              Box_Carton_Number:       txtCarton.Text,
+                              Roll_Number:             txtRoll.Text,
+                              Protein:                 If(cmbProtein.Selected.Value = "-- Other --", txtProteinOther.Text, cmbProtein.Selected.Value),
+                              Vendor:                  If(cmbVendor.Selected.Value = "-- Other --", txtVendorOther.Text, cmbVendor.Selected.Value),
+                              Cut:                     If(cmbCut.Selected.Value = "-- Other --", txtCutOther.Text, cmbCut.Selected.Value),
+                              Bag:                     If(cmbBag.Selected.Value = "-- Other --", txtBagOther.Text, cmbBag.Selected.Value),
+                              Product_Type:            cmbProductType.Selected.Value,
+                              Not_Listed_Product_Info: txtNotListedProductInfo.Text,
+                              MS_Bag_Width:            If(IsBlank(txtBagWidth.Text) || txtBagWidth.Text = "", 0, Value(txtBagWidth.Text)),
+                              MS_Bag_Length:           If(IsBlank(txtBagLength.Text) || txtBagLength.Text = "", 0, Value(txtBagLength.Text))
+                          });
+                          If(
+                              IsBlank(varAuditSPID) && !varEditMode,
+                              Set(varAuditSPID,
+                                  Patch(Calibrate_Audit_Data, Defaults(Calibrate_Audit_Data), varCustomerRecord).ID
+                              ),
+                              Patch(Calibrate_Audit_Data,
+                                  LookUp(Calibrate_Audit_Data, ID = If(varEditMode, varSelectedAudit.ID, varAuditSPID)),
+                                  varCustomerRecord
+                              )
+                          );
+                          */
+                          Navigate(scrMachine)
+                        PressedBorderColor: =cNavy
+                        PressedColor: =cWhite
+                        PressedFill: =RGBA(0, 40, 70, 1)
+                        RadiusBottomLeft: =4
+                        RadiusBottomRight: =4
+                        RadiusTopLeft: =4
+                        RadiusTopRight: =4
+                        Size: =14
+                        Text: ="Next"
+                        Width: =(Parent.Width - 32) / 3

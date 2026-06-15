@@ -36,7 +36,6 @@ def outer_gallery(name, ds):
     ip = " " * 42
     L.append(f"{a}- {g}:")
     L.append(f"{k}Control: Gallery@2.15.0")
-    L.append(f"{k}Layout: Vertical")
     L.append(f"{k}Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0")
     L.append(f"{k}Properties:")
     L.append(f"{p}BorderColor: =RGBA(245, 245, 245, 1)")
@@ -46,7 +45,7 @@ def outer_gallery(name, ds):
     L.append(f"{p}Items: ={flt}")
     L.append(f"{p}LayoutMinHeight: =16")
     L.append(f"{p}LayoutMinWidth: =16")
-    L.append(f"{p}TemplateSize: =188")
+    L.append(f"{p}TemplateSize: =220")
     L.append(f"{p}Visible: =varEditMode")
     L.append(f"{p}Width: =Parent.Width")
     L.append(f"{k}Children:")
@@ -66,31 +65,33 @@ def outer_gallery(name, ds):
     L.append(f"{tp}X: =8")
     L.append(f"{tp}Y: =6")
     # nested horizontal gallery over the row's attachments
+    # nested gallery = wrapped thumbnail grid over the row's attachments
+    # (no 'Layout' keyword — Gallery direction comes from WrapCount/template)
     L.append(f"{td}- {ng}:")
     L.append(f"{tk}Control: Gallery@2.15.0")
-    L.append(f"{tk}Layout: Horizontal")
     L.append(f"{tk}Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0")
     L.append(f"{tk}Properties:")
     L.append(f"{tp}Fill: =RGBA(255, 255, 255, 1)")
-    L.append(f"{tp}Height: =150")
+    L.append(f"{tp}Height: =184")
     L.append(f"{tp}Items: =ThisItem.Attachments")
     L.append(f"{tp}LayoutMinHeight: =16")
     L.append(f"{tp}LayoutMinWidth: =16")
-    L.append(f"{tp}TemplateSize: =150")
+    L.append(f"{tp}TemplateSize: =92")
     L.append(f"{tp}Width: =Parent.TemplateWidth - 16")
+    L.append(f"{tp}WrapCount: =3")
     L.append(f"{tp}X: =8")
     L.append(f"{tp}Y: ={lbl}.Y + {lbl}.Height + 4")
     L.append(f"{tk}Children:")
     L.append(f"{id_}- {img}:")
     L.append(f"{ik}Control: Image@2.2.3")
     L.append(f"{ik}Properties:")
-    L.append(f"{ip}Height: =Parent.TemplateHeight - 12")
+    L.append(f"{ip}Height: =Parent.TemplateHeight - 8")
     L.append(f"{ip}Image: =ThisItem.Value")
     L.append(f"{ip}ImagePosition: =ImagePosition.Fit")
     L.append(f"{ip}OnSelect: =Select(Parent)")
-    L.append(f"{ip}Width: =Parent.TemplateWidth - 12")
-    L.append(f"{ip}X: =6")
-    L.append(f"{ip}Y: =6")
+    L.append(f"{ip}Width: =Parent.TemplateWidth - 8")
+    L.append(f"{ip}X: =4")
+    L.append(f"{ip}Y: =4")
     return L
 
 
@@ -145,12 +146,16 @@ def build_section():
 def main():
     with open(SRC, "r", newline="") as f:
         lines = f.readlines()
-    if any("SavedPhotosSection_Audit" in ln for ln in lines):
-        raise SystemExit("section already present; aborting")
-    # insert before the FooterContainer (sibling of MainContainer), but at MainContainer
-    # child indent (18) so it lands inside MainContainer_Audit, after frmAudit.
     foot = next(i for i, ln in enumerate(lines)
                 if ln.rstrip("\n") == " " * 12 + "- FooterContainer_Audit:")
+    # re-runnable: drop any previously inserted section (dash-18 .. FooterContainer)
+    sec = next((i for i, ln in enumerate(lines)
+                if ln.rstrip("\n") == " " * 18 + "- SavedPhotosSection_Audit:"), None)
+    if sec is not None:
+        del lines[sec:foot]
+        foot = sec
+    # insert before the FooterContainer but at MainContainer child indent (18) so it
+    # lands inside MainContainer_Audit, after frmAudit.
     block = build_section()
     lines[foot:foot] = block
     with open(SRC, "w", newline="") as f:

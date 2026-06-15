@@ -16104,7 +16104,6 @@ Screens:
                               Width: =Parent.Width - 16
                         - galSavedMachine:
                             Control: Gallery@2.15.0
-                            Layout: Vertical
                             Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
                             Properties:
                               BorderColor: =RGBA(245, 245, 245, 1)
@@ -16114,7 +16113,7 @@ Screens:
                               Items: =Filter(Audit_Machine_Failures, Audit_ID = varSelectedAudit.Title)
                               LayoutMinHeight: =16
                               LayoutMinWidth: =16
-                              TemplateSize: =188
+                              TemplateSize: =220
                               Visible: =varEditMode
                               Width: =Parent.Width
                             Children:
@@ -16134,32 +16133,31 @@ Screens:
                                     Y: =6
                               - galSavedMachinePhotos:
                                   Control: Gallery@2.15.0
-                                  Layout: Horizontal
                                   Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
                                   Properties:
                                     Fill: =RGBA(255, 255, 255, 1)
-                                    Height: =150
+                                    Height: =184
                                     Items: =ThisItem.Attachments
                                     LayoutMinHeight: =16
                                     LayoutMinWidth: =16
-                                    TemplateSize: =150
+                                    TemplateSize: =92
                                     Width: =Parent.TemplateWidth - 16
+                                    WrapCount: =3
                                     X: =8
                                     Y: =lblSavedMachineType.Y + lblSavedMachineType.Height + 4
                                   Children:
                                     - imgSavedMachine:
                                         Control: Image@2.2.3
                                         Properties:
-                                          Height: =Parent.TemplateHeight - 12
+                                          Height: =Parent.TemplateHeight - 8
                                           Image: =ThisItem.Value
                                           ImagePosition: =ImagePosition.Fit
                                           OnSelect: =Select(Parent)
-                                          Width: =Parent.TemplateWidth - 12
-                                          X: =6
-                                          Y: =6
+                                          Width: =Parent.TemplateWidth - 8
+                                          X: =4
+                                          Y: =4
                         - galSavedOperator:
                             Control: Gallery@2.15.0
-                            Layout: Vertical
                             Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
                             Properties:
                               BorderColor: =RGBA(245, 245, 245, 1)
@@ -16169,7 +16167,7 @@ Screens:
                               Items: =Filter(Audit_Operator_Failures, Audit_ID = varSelectedAudit.Title)
                               LayoutMinHeight: =16
                               LayoutMinWidth: =16
-                              TemplateSize: =188
+                              TemplateSize: =220
                               Visible: =varEditMode
                               Width: =Parent.Width
                             Children:
@@ -16189,32 +16187,31 @@ Screens:
                                     Y: =6
                               - galSavedOperatorPhotos:
                                   Control: Gallery@2.15.0
-                                  Layout: Horizontal
                                   Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
                                   Properties:
                                     Fill: =RGBA(255, 255, 255, 1)
-                                    Height: =150
+                                    Height: =184
                                     Items: =ThisItem.Attachments
                                     LayoutMinHeight: =16
                                     LayoutMinWidth: =16
-                                    TemplateSize: =150
+                                    TemplateSize: =92
                                     Width: =Parent.TemplateWidth - 16
+                                    WrapCount: =3
                                     X: =8
                                     Y: =lblSavedOperatorType.Y + lblSavedOperatorType.Height + 4
                                   Children:
                                     - imgSavedOperator:
                                         Control: Image@2.2.3
                                         Properties:
-                                          Height: =Parent.TemplateHeight - 12
+                                          Height: =Parent.TemplateHeight - 8
                                           Image: =ThisItem.Value
                                           ImagePosition: =ImagePosition.Fit
                                           OnSelect: =Select(Parent)
-                                          Width: =Parent.TemplateWidth - 12
-                                          X: =6
-                                          Y: =6
+                                          Width: =Parent.TemplateWidth - 8
+                                          X: =4
+                                          Y: =4
                         - galSavedBag:
                             Control: Gallery@2.15.0
-                            Layout: Vertical
                             Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
                             Properties:
                               BorderColor: =RGBA(245, 245, 245, 1)
@@ -16224,7 +16221,7 @@ Screens:
                               Items: =Filter(Audit_Bag_Failures, Audit_ID = varSelectedAudit.Title)
                               LayoutMinHeight: =16
                               LayoutMinWidth: =16
-                              TemplateSize: =188
+                              TemplateSize: =220
                               Visible: =varEditMode
                               Width: =Parent.Width
                             Children:
@@ -16244,29 +16241,29 @@ Screens:
                                     Y: =6
                               - galSavedBagPhotos:
                                   Control: Gallery@2.15.0
-                                  Layout: Horizontal
                                   Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
                                   Properties:
                                     Fill: =RGBA(255, 255, 255, 1)
-                                    Height: =150
+                                    Height: =184
                                     Items: =ThisItem.Attachments
                                     LayoutMinHeight: =16
                                     LayoutMinWidth: =16
-                                    TemplateSize: =150
+                                    TemplateSize: =92
                                     Width: =Parent.TemplateWidth - 16
+                                    WrapCount: =3
                                     X: =8
                                     Y: =lblSavedBagType.Y + lblSavedBagType.Height + 4
                                   Children:
                                     - imgSavedBag:
                                         Control: Image@2.2.3
                                         Properties:
-                                          Height: =Parent.TemplateHeight - 12
+                                          Height: =Parent.TemplateHeight - 8
                                           Image: =ThisItem.Value
                                           ImagePosition: =ImagePosition.Fit
                                           OnSelect: =Select(Parent)
-                                          Width: =Parent.TemplateWidth - 12
-                                          X: =6
-                                          Y: =6
+                                          Width: =Parent.TemplateWidth - 8
+                                          X: =4
+                                          Y: =4
             - FooterContainer_Audit:
                 Control: GroupContainer@1.5.0
                 Variant: AutoLayout

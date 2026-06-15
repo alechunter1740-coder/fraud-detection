@@ -5908,11 +5908,7 @@ Screens:
                                               Row_Key: varAuditKey & "|MF_Low_Vacuum",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "MF_Low_Vacuum" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Low_Vacuum" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "MF_Low_Vacuum" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Low_Vacuum" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "MF_Low_Vacuum" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Low_Vacuum" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "MF_Low_Vacuum" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Low_Vacuum" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "MF_Low_Vacuum" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Low_Vacuum" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "MF_Low_Vacuum") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Machine_Failures, ex))
@@ -5929,11 +5925,7 @@ Screens:
                                               Row_Key: varAuditKey & "|MF_Cold_Seal",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "MF_Cold_Seal" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Cold_Seal" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "MF_Cold_Seal" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Cold_Seal" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "MF_Cold_Seal" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Cold_Seal" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "MF_Cold_Seal" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Cold_Seal" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "MF_Cold_Seal" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Cold_Seal" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "MF_Cold_Seal") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Machine_Failures, ex))
@@ -5950,11 +5942,7 @@ Screens:
                                               Row_Key: varAuditKey & "|MF_Edge_Tear",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "MF_Edge_Tear" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Edge_Tear" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "MF_Edge_Tear" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Edge_Tear" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "MF_Edge_Tear" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Edge_Tear" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "MF_Edge_Tear" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Edge_Tear" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "MF_Edge_Tear" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Edge_Tear" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "MF_Edge_Tear") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Machine_Failures, ex))
@@ -5971,11 +5959,7 @@ Screens:
                                               Row_Key: varAuditKey & "|MF_Pull_Back",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "MF_Pull_Back" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Pull_Back" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "MF_Pull_Back" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Pull_Back" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "MF_Pull_Back" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Pull_Back" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "MF_Pull_Back" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Pull_Back" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "MF_Pull_Back" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Pull_Back" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "MF_Pull_Back") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Machine_Failures, ex))
@@ -5992,11 +5976,7 @@ Screens:
                                               Row_Key: varAuditKey & "|MF_Burnt_Seals",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "MF_Burnt_Seals" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Burnt_Seals" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "MF_Burnt_Seals" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Burnt_Seals" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "MF_Burnt_Seals" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Burnt_Seals" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "MF_Burnt_Seals" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Burnt_Seals" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "MF_Burnt_Seals" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Burnt_Seals" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "MF_Burnt_Seals") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Machine_Failures, ex))
@@ -6013,11 +5993,7 @@ Screens:
                                               Row_Key: varAuditKey & "|MF_Other",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "MF_Other" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Other" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "MF_Other" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Other" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "MF_Other" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Other" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "MF_Other" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Other" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "MF_Other" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "MF_Other" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "MF_Other") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Machine_Failures, ex))
@@ -6034,11 +6010,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Meat_In_Seals",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "OF_Meat_In_Seals" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Meat_In_Seals" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "OF_Meat_In_Seals" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Meat_In_Seals" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "OF_Meat_In_Seals" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Meat_In_Seals" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "OF_Meat_In_Seals" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Meat_In_Seals" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "OF_Meat_In_Seals" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Meat_In_Seals" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "OF_Meat_In_Seals") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6055,11 +6027,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Prod_Reject",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "OF_Prod_Reject" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Prod_Reject" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "OF_Prod_Reject" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Prod_Reject" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "OF_Prod_Reject" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Prod_Reject" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "OF_Prod_Reject" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Prod_Reject" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "OF_Prod_Reject" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Prod_Reject" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "OF_Prod_Reject") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6076,11 +6044,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Multiple_Pleat",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "OF_Multiple_Pleat" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Multiple_Pleat" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "OF_Multiple_Pleat" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Multiple_Pleat" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "OF_Multiple_Pleat" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Multiple_Pleat" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "OF_Multiple_Pleat" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Multiple_Pleat" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "OF_Multiple_Pleat" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Multiple_Pleat" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "OF_Multiple_Pleat") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6097,11 +6061,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Bag_Tear",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "OF_Bag_Tear" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Bag_Tear" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "OF_Bag_Tear" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Bag_Tear" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "OF_Bag_Tear" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Bag_Tear" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "OF_Bag_Tear" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Bag_Tear" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "OF_Bag_Tear" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Bag_Tear" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "OF_Bag_Tear") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6118,11 +6078,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Incomplete_Seal",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "OF_Incomplete_Seal" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Incomplete_Seal" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "OF_Incomplete_Seal" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Incomplete_Seal" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "OF_Incomplete_Seal" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Incomplete_Seal" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "OF_Incomplete_Seal" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Incomplete_Seal" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "OF_Incomplete_Seal" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Incomplete_Seal" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "OF_Incomplete_Seal") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6139,11 +6095,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Uncovered_Bone",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "OF_Uncovered_Bone" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Uncovered_Bone" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "OF_Uncovered_Bone" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Uncovered_Bone" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "OF_Uncovered_Bone" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Uncovered_Bone" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "OF_Uncovered_Bone" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Uncovered_Bone" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "OF_Uncovered_Bone" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Uncovered_Bone" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "OF_Uncovered_Bone") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6160,11 +6112,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Pull_Back",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "OF_Pull_Back" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Pull_Back" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "OF_Pull_Back" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Pull_Back" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "OF_Pull_Back" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Pull_Back" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "OF_Pull_Back" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Pull_Back" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "OF_Pull_Back" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Pull_Back" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "OF_Pull_Back") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6181,11 +6129,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Two_Per_Platen",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "OF_Two_Per_Platen" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Two_Per_Platen" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "OF_Two_Per_Platen" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Two_Per_Platen" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "OF_Two_Per_Platen" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Two_Per_Platen" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "OF_Two_Per_Platen" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Two_Per_Platen" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "OF_Two_Per_Platen" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Two_Per_Platen" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "OF_Two_Per_Platen") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6202,11 +6146,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Other",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "OF_Other" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Other" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "OF_Other" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Other" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "OF_Other" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Other" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "OF_Other" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Other" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "OF_Other" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "OF_Other" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "OF_Other") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6223,11 +6163,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Hole_Before_Shrink",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "BRF_Hole_Before_Shrink" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Hole_Before_Shrink" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "BRF_Hole_Before_Shrink" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Hole_Before_Shrink" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "BRF_Hole_Before_Shrink" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Hole_Before_Shrink" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "BRF_Hole_Before_Shrink" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Hole_Before_Shrink" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "BRF_Hole_Before_Shrink" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Hole_Before_Shrink" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "BRF_Hole_Before_Shrink") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6244,11 +6180,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Hole_After_Shrink",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "BRF_Hole_After_Shrink" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Hole_After_Shrink" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "BRF_Hole_After_Shrink" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Hole_After_Shrink" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "BRF_Hole_After_Shrink" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Hole_After_Shrink" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "BRF_Hole_After_Shrink" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Hole_After_Shrink" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "BRF_Hole_After_Shrink" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Hole_After_Shrink" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "BRF_Hole_After_Shrink") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6265,11 +6197,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Covered_Bone",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "BRF_Covered_Bone" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Covered_Bone" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "BRF_Covered_Bone" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Covered_Bone" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "BRF_Covered_Bone" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Covered_Bone" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "BRF_Covered_Bone" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Covered_Bone" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "BRF_Covered_Bone" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Covered_Bone" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "BRF_Covered_Bone") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6286,11 +6214,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Single_Pleat",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "BRF_Single_Pleat" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Single_Pleat" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "BRF_Single_Pleat" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Single_Pleat" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "BRF_Single_Pleat" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Single_Pleat" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "BRF_Single_Pleat" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Single_Pleat" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "BRF_Single_Pleat" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Single_Pleat" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "BRF_Single_Pleat") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6307,11 +6231,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Edge_Tear",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "BRF_Edge_Tear" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Edge_Tear" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "BRF_Edge_Tear" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Edge_Tear" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "BRF_Edge_Tear" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Edge_Tear" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "BRF_Edge_Tear" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Edge_Tear" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "BRF_Edge_Tear" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Edge_Tear" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "BRF_Edge_Tear") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6328,11 +6248,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Factory_Seal",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "BRF_Factory_Seal" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Factory_Seal" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "BRF_Factory_Seal" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Factory_Seal" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "BRF_Factory_Seal" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Factory_Seal" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "BRF_Factory_Seal" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Factory_Seal" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "BRF_Factory_Seal" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Factory_Seal" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "BRF_Factory_Seal") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6349,11 +6265,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Heal_Break",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "BRF_Heal_Break" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Heal_Break" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "BRF_Heal_Break" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Heal_Break" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "BRF_Heal_Break" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Heal_Break" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "BRF_Heal_Break" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Heal_Break" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "BRF_Heal_Break" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Heal_Break" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "BRF_Heal_Break") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6370,11 +6282,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Other",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photo1: If(IsBlank(LookUp(colPhotos, key = "BRF_Other" && index = 1).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Other" && index = 1).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo2: If(IsBlank(LookUp(colPhotos, key = "BRF_Other" && index = 2).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Other" && index = 2).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo3: If(IsBlank(LookUp(colPhotos, key = "BRF_Other" && index = 3).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Other" && index = 3).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo4: If(IsBlank(LookUp(colPhotos, key = "BRF_Other" && index = 4).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Other" && index = 4).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2))),
-                                              Photo5: If(IsBlank(LookUp(colPhotos, key = "BRF_Other" && index = 5).photo), "", With({j: JSON(LookUp(colPhotos, key = "BRF_Other" && index = 5).photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)))
+                                              Photos: Concat(Filter(colPhotos, key = "BRF_Other") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))

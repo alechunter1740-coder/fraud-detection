@@ -6127,7 +6127,7 @@ Screens:
                         HoverBorderColor: =RGBA(0, 0, 0, 0)
                         HoverColor: =cWhite
                         HoverFill: =RGBA(164, 38, 60, 1)
-                        OnSelect: =Remove(Calibrate_Audit_Data, varSelectedAudit); Set(varShowDeleteConfirm, false); Notify("Audit deleted.", NotificationType.Success); Navigate(scrLookup)
+                        OnSelect: =RemoveIf(Audit_Machine_Failures, Audit_ID = varSelectedAudit.Title); RemoveIf(Audit_Operator_Failures, Audit_ID = varSelectedAudit.Title); RemoveIf(Audit_Bag_Failures, Audit_ID = varSelectedAudit.Title); Remove(Calibrate_Audit_Data, varSelectedAudit); Set(varShowDeleteConfirm, false); Notify("Audit deleted.", NotificationType.Success); Navigate(scrLookup)
                         PressedBorderColor: =RGBA(196, 49, 75, 1)
                         PressedColor: =cWhite
                         PressedFill: =RGBA(140, 30, 50, 1)

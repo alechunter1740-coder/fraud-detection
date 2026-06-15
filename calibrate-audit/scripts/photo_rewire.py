@@ -169,8 +169,10 @@ def upsert_block(code):
     b.append(f'{ind}                Row_Key: varAuditKey & "|{code}",')
     b.append(f'{ind}                Customer: If(varSelectedCustomer.customer_name = \"-- Other --\", txtCustomerOther.Text, varSelectedCustomer.customer_name),')
     b.append(f'{ind}                Audit_Date: dteAudit.SelectedDate,')
-    b.append(f'{ind}                Attachments: ForAll(Filter(colPhotos, key = "{code}") As p,')
-    b.append(f'{ind}                    {{Name: "{code}_" & Text(p.index) & ".jpg", Value: p.photo}})')
+    for _n in range(1, 6):
+        _lk = f'LookUp(colPhotos, key = "{code}" && index = {_n}).photo'
+        _comma = ',' if _n < 5 else ''
+        b.append(f'{ind}                Photo{_n}: If(IsBlank({_lk}), "", With({{{{j: JSON({_lk}, JSONFormat.IncludeBinaryData)}}}}, Mid(j, 2, Len(j) - 2))){_comma}')
     b.append(f'{ind}            }}')
     b.append(f'{ind}        ),')
     b.append(f'{ind}        If(!IsBlank(ex), Remove({lst}, ex))')

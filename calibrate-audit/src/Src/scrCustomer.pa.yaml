@@ -134,7 +134,7 @@ Screens:
                               Location:                If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value),
                               Audit_Type:              If(cmbAuditType.Selected.Value = "-- Other --", txtAuditTypeOther.Text, cmbAuditType.Selected.Value),
                               Audit_Type_Detail:       txtAuditTypeDetail.Text,
-                              'Audit Desc':            txtAuditDesc.Text,
+                              AuditDesc:               txtAuditDesc.Text,
                               Machine_Line_Number:     If(varPriorRecordsExist, If(varSelectedLineNumber.Value = "-- Other --", txtMachineLineNum.Text, varSelectedLineNumber.Value), txtMachineLineNum.Text),
                               Machine_Serial_Number:   If(varPriorRecordsExist, If(varSelectedSerialNumber.Value = "-- Other --", txtSerialNum.Text, varSelectedSerialNumber.Value), txtSerialNum.Text),
                               Lot_Batch_Number:        If(varPriorRecordsExist, If(varSelectedLotBatch.Value = "-- Other --", txtBatchLot.Text, varSelectedLotBatch.Value), txtBatchLot.Text),
@@ -404,7 +404,7 @@ Screens:
                                     Visible: =varSelectedCustomer.customer_name = "-- Other --"
                                     Width: =Parent.Width - 32
                                     X: =24
-                                    Y: =lblCustomerSelected.Y + lblCustomerSelected.Height + 4
+                                    Y: =cmbCustomer.Y + cmbCustomer.Height + 4
                         - crdLocation:
                             Control: TypedDataCard@1.0.7
                             Variant: TextualEdit
@@ -437,133 +437,54 @@ Screens:
                                     Wrap: =false
                                     X: =24
                                     Y: =10
-                              - lblLocationSelected:
-                                  Control: Label@2.5.1
+                              - cmbLocation:
+                                  Control: ModernCombobox@1.1.0
                                   Properties:
-                                    BorderColor: =RGBA(229, 229, 229, 1)
-                                    BorderThickness: =1
-                                    Color: =If(IsBlank(varSelectedLocation.Value), RGBA(166, 166, 166, 1), cText)
-                                    Fill: =RGBA(248, 248, 248, 1)
-                                    Font: =gFont
-                                    Height: =38
-                                    HoverBorderColor: =cNavy
-                                    HoverFill: =RGBA(245, 248, 252, 1)
-                                    OnSelect: =Set(varLocationSearchVisible, true)
-                                    PaddingLeft: =8
-                                    Size: =14
-                                    Text: =If(IsBlank(varSelectedLocation.Value), "Search or select location...", varSelectedLocation.Value)
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =lblLocation.Y + lblLocation.Height + 4
-                              - txtLocationSearch:
-                                  Control: Classic/TextInput@2.3.2
-                                  Properties:
-                                    BorderColor: =cNavy
-                                    BorderThickness: =1
-                                    Color: =cText
-                                    Default: =varLocationSearchText
-                                    DelayOutput: =true
-                                    Fill: =RGBA(248, 248, 248, 1)
-                                    Font: =gFont
-                                    Height: =38
-                                    HintText: ="Type to search locations..."
-                                    HoverBorderColor: =cNavy
-                                    HoverFill: =RGBA(245, 248, 252, 1)
-                                    OnChange: =Set(varSelectedLocation, Blank()); Set(varLocationSearchText, Self.Text)
-                                    RadiusBottomLeft: =4
-                                    RadiusBottomRight: =4
-                                    RadiusTopLeft: =4
-                                    RadiusTopRight: =4
-                                    Visible: =varLocationSearchVisible
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =lblLocation.Y + lblLocation.Height + 4
-                              - galLocationSearch:
-                                  Control: Gallery@2.15.0
-                                  Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
-                                  Properties:
-                                    BorderColor: =RGBA(200, 200, 200, 1)
-                                    BorderThickness: =1
-                                    Fill: =RGBA(255, 255, 255, 1)
-                                    Height: =Min(CountRows(galLocationSearch.AllItems) * 40, 200)
-                                    Items: |-
+                                    DefaultSelectedItems: |-
                                       =If(
-                                          Len(txtLocationSearch.Text) >= 2,
-                                          Table(
-                                              {Value: "-- Other --"},
-                                              Filter(
-                                                  Distinct(
-                                                      Filter(
-                                                          colAuditData,
-                                                          !IsBlank(Location) && Location <> "" && Trim(Location) <> ""
-                                                      ),
-                                                      Location
-                                                  ),
-                                                  StartsWith(Value, txtLocationSearch.Text)
-                                              )
-                                          ),
+                                          !IsBlank(varSelectedLocation.Value),
+                                          Table({Value: varSelectedLocation.Value}),
                                           Blank()
                                       )
-                                    TemplateSize: =40
-                                    Visible: =varLocationSearchVisible && Len(txtLocationSearch.Text) >= 2
-                                    Width: =Parent.Width - 48
+                                    InputTextPlaceholder: ="Select or type a location..."
+                                    IsSearchable: =true
+                                    ItemDisplayText: =ThisItem.Value
+                                    Items: |-
+                                      =Table(
+                                          Sort(
+                                              Distinct(
+                                                  Filter(
+                                                      colAuditData,
+                                                      Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
+                                                      !IsBlank(Location) && Location <> ""
+                                                  ),
+                                                  Location
+                                              ),
+                                              Value,
+                                              SortOrder.Ascending
+                                          ),
+                                          {Value: "-- Other --"}
+                                      )
+                                    OnChange: |-
+                                      =Set(varSelectedLocation, Self.Selected);
+                                      Set(varPriorRecordsExist,
+                                          CountRows(
+                                              Filter(colAuditData,
+                                                  Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
+                                                  Location = If(Self.Selected.Value = "-- Other --", txtLocationOther.Text, Self.Selected.Value)
+                                              )
+                                          ) > 0
+                                      );
+                                      Set(varSelectedLineNumber, Blank());
+                                      Set(varSelectedSerialNumber, Blank());
+                                      Set(varSelectedLotBatch, Blank());
+                                      Set(varSelectedBoxCarton, Blank());
+                                      Set(varSelectedRollNumber, Blank())
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Width: =Parent.Width - 32
                                     X: =24
-                                    Y: =txtLocationSearch.Y + txtLocationSearch.Height
-                                  Children:
-                                    - rectGalLocationBg:
-                                        Control: Rectangle@2.3.0
-                                        Properties:
-                                          Fill: =If(ThisItem.IsSelected, RGBA(235, 244, 250, 1), RGBA(255, 255, 255, 1))
-                                          Height: =40
-                                          Width: =Parent.Width
-                                    - rectGalLocationDivider:
-                                        Control: Rectangle@2.3.0
-                                        Properties:
-                                          Fill: =RGBA(237, 235, 233, 1)
-                                          Height: =1
-                                          Width: =Parent.Width
-                                          Y: =39
-                                    - lblGalLocationName:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          Color: =cNavy
-                                          Font: =gFont
-                                          FontWeight: =FontWeight.Semibold
-                                          PaddingLeft: =12
-                                          Text: =ThisItem.Value
-                                          Width: =Parent.Width
-                                    - btnGalLocationSelect:
-                                        Control: Classic/Button@2.2.0
-                                        Properties:
-                                          BorderColor: =RGBA(0, 0, 0, 0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =RGBA(0, 0, 0, 0)
-                                          Fill: =RGBA(0, 0, 0, 0)
-                                          HoverColor: =RGBA(0, 0, 0, 0)
-                                          HoverFill: =RGBA(235, 244, 250, 0.6)
-                                          OnSelect: |-
-                                            =Set(varSelectedLocation, ThisItem);
-                                            Set(varLocationSearchVisible, false);
-                                            Set(varLocationSearchText, "");
-                                            Set(varPriorRecordsExist,
-                                                CountRows(
-                                                    Filter(
-                                                        colAuditData,
-                                                        Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
-                                                        Location = If(ThisItem.Value = "-- Other --", txtLocationOther.Text, ThisItem.Value)
-                                                    )
-                                                ) > 0
-                                            );
-                                            Set(varSelectedLineNumber, Blank());
-                                            Set(varSelectedSerialNumber, Blank());
-                                            Set(varSelectedLotBatch, Blank());
-                                            Set(varSelectedBoxCarton, Blank());
-                                            Set(varSelectedRollNumber, Blank());
-                                            Set(varSelectedBagWidth, Blank());
-                                            Set(varSelectedBagLength, Blank())
-                                          PressedFill: =RGBA(210, 228, 240, 0.8)
-                                          Text: =""
-                                          Width: =Parent.Width
+                                    Y: =lblLocation.Y + lblLocation.Height + 4
                               - txtLocationOther:
                                   Control: ModernTextInput@1.0.0
                                   Properties:
@@ -584,7 +505,7 @@ Screens:
                                     Visible: =varSelectedLocation.Value = "-- Other --"
                                     Width: =Parent.Width - 48
                                     X: =24
-                                    Y: =lblLocationSelected.Y + lblLocationSelected.Height + 4
+                                    Y: =cmbLocation.Y + cmbLocation.Height + 4
                         - crdAuditDate:
                             Control: TypedDataCard@1.0.7
                             Variant: DateEdit
@@ -635,7 +556,7 @@ Screens:
                                     IconBackground: =cNavy
                                     IconFill: =cWhite
                                     InputTextPlaceholder: ="Select a date..."
-                                    Width: =lblCustomerSelected.Width
+                                    Width: =cmbCustomer.Width
                                     X: =24
                                     Y: =lblAuditDate.Y + lblAuditDate.Height + 4
                         - crdAuditType:
@@ -751,7 +672,7 @@ Screens:
                             Variant: TextualEdit
                             Properties:
                               BorderColor: =RGBA(245, 245, 245, 1)
-                              DataField: ="Audit Desc"
+                              DataField: ="AuditDesc"
                               Default: =""
                               DisplayName: ="Audit Description"
                               Height: =200
@@ -790,7 +711,7 @@ Screens:
                                   Control: ModernTextInput@1.0.0
                                   Properties:
                                     AccessibleLabel: ="Audit Description"
-                                    Default: =If(varEditMode, varSelectedAudit.'Audit Desc', "")
+                                    Default: =If(varEditMode, varSelectedAudit.AuditDesc, "")
                                     DisplayMode: =Parent.DisplayMode
                                     FontWeight: =""
                                     Height: =96

@@ -133,7 +133,7 @@ Screens:
                           Set(varHasResumeData, false);
                           Set(varSelectedCustomer, Blank());
                           Set(varSelectedLocation, Blank());
-                          Set(varAuditKey, "AUD-" & Text(Max(Calibrate_Audit_Data, ID) + 1, "00000"));
+                          Set(varAuditKey, "AUD-" & Text(First(Sort(Calibrate_Audit_Data, ID, SortOrder.Descending)).ID + 1, "00000"));
                           ClearCollect(localAuditQueue, {
                               Audit_Key: varAuditKey,
                               Audit_Date: Today(),

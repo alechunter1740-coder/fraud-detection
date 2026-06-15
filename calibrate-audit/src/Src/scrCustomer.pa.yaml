@@ -350,7 +350,12 @@ Screens:
                               - cmbCustomer:
                                   Control: ModernCombobox@1.1.0
                                   Properties:
-                                    DefaultSelectedItems: =If(!IsBlank(varSelectedCustomer.customer_name), Table({customer_name: varSelectedCustomer.customer_name, customer_nbr: varSelectedCustomer.customer_nbr, customer_location: varSelectedCustomer.customer_location}), Blank())
+                                    DefaultSelectedItems: |-
+                                      =If(
+                                          !IsBlank(varSelectedCustomer.customer_name),
+                                          Table({customer_name: varSelectedCustomer.customer_name, customer_nbr: varSelectedCustomer.customer_nbr, customer_location: varSelectedCustomer.customer_location}),
+                                          Blank()
+                                      )
                                     InputTextPlaceholder: ="Type to search customers..."
                                     IsSearchable: =true
                                     ItemDisplayText: =ThisItem.customer_name

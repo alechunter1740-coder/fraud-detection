@@ -12,19 +12,7 @@ Screens:
       Fill: =RGBA(255, 255, 255, 1)
       LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
       OnVisible: |-
-        =If(varEditMode && !varComingFromSummary,
-            Clear(colPhotos);
-            ForAll(Filter(Audit_Machine_Failures,  Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,
-                ForAll(Sequence(CountRows(r.Attachments)) As i,
-                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Last(FirstN(r.Attachments, i.Value)).Value})));
-            ForAll(Filter(Audit_Operator_Failures, Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,
-                ForAll(Sequence(CountRows(r.Attachments)) As i,
-                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Last(FirstN(r.Attachments, i.Value)).Value})));
-            ForAll(Filter(Audit_Bag_Failures,      Audit_ID = If(varEditMode, varSelectedAudit.Title, varAuditKey)) As r,
-                ForAll(Sequence(CountRows(r.Attachments)) As i,
-                    Collect(colPhotos, {key: r.Failure_Code, index: i.Value, photo: Last(FirstN(r.Attachments, i.Value)).Value})))
-        );
-        If(!varComingFromSummary,
+        =If(!varComingFromSummary,
             If(varEditMode,
                 Set(varTotalPackages, varSelectedAudit.Total_Packages);
                 Set(varMF_LowVac, varSelectedAudit.MF_Low_Vacuum);
@@ -16080,6 +16068,205 @@ Screens:
                                     Width: =Parent.Width - 48
                                     X: =24
                                     Y: =lblInternalComments.Y + lblInternalComments.Height + 4
+                  - SavedPhotosSection_Audit:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FillPortions: =0
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMinHeight: =16
+                        LayoutMinWidth: =16
+                        PaddingBottom: =8
+                        PaddingLeft: =8
+                        PaddingRight: =8
+                        PaddingTop: =8
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Visible: =varEditMode
+                      Children:
+                        - lblSavedPhotosHeader_Audit:
+                            Control: Text@0.0.51
+                            Properties:
+                              Align: =""
+                              FillPortions: =0
+                              Font: =gFont
+                              FontColor: =cNavy
+                              Height: =32
+                              Size: =16
+                              Text: ="Previously Saved Photos"
+                              VerticalAlign: ="Middle"
+                              Weight: ="Semibold"
+                              Width: =Parent.Width - 16
+                        - galSavedMachine:
+                            Control: Gallery@2.15.0
+                            Layout: Vertical
+                            Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              Fill: =RGBA(255, 255, 255, 1)
+                              FillPortions: =0
+                              Height: =Max(CountRows(Filter(Audit_Machine_Failures, Audit_ID = varSelectedAudit.Title)), 0) * Self.TemplateSize
+                              Items: =Filter(Audit_Machine_Failures, Audit_ID = varSelectedAudit.Title)
+                              LayoutMinHeight: =16
+                              LayoutMinWidth: =16
+                              TemplateSize: =188
+                              Visible: =varEditMode
+                              Width: =Parent.Width
+                            Children:
+                              - lblSavedMachineType:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    Color: =cNavy
+                                    Font: =gFont
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =26
+                                    OnSelect: =Select(Parent)
+                                    PaddingLeft: =8
+                                    Size: =14
+                                    Text: =ThisItem.Failure_Label
+                                    Width: =Parent.TemplateWidth - 16
+                                    X: =8
+                                    Y: =6
+                              - galSavedMachinePhotos:
+                                  Control: Gallery@2.15.0
+                                  Layout: Horizontal
+                                  Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
+                                  Properties:
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Height: =150
+                                    Items: =ThisItem.Attachments
+                                    LayoutMinHeight: =16
+                                    LayoutMinWidth: =16
+                                    TemplateSize: =150
+                                    Width: =Parent.TemplateWidth - 16
+                                    X: =8
+                                    Y: =lblSavedMachineType.Y + lblSavedMachineType.Height + 4
+                                  Children:
+                                    - imgSavedMachine:
+                                        Control: Image@2.2.3
+                                        Properties:
+                                          Height: =Parent.TemplateHeight - 12
+                                          Image: =ThisItem.Value
+                                          ImagePosition: =ImagePosition.Fit
+                                          OnSelect: =Select(Parent)
+                                          Width: =Parent.TemplateWidth - 12
+                                          X: =6
+                                          Y: =6
+                        - galSavedOperator:
+                            Control: Gallery@2.15.0
+                            Layout: Vertical
+                            Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              Fill: =RGBA(255, 255, 255, 1)
+                              FillPortions: =0
+                              Height: =Max(CountRows(Filter(Audit_Operator_Failures, Audit_ID = varSelectedAudit.Title)), 0) * Self.TemplateSize
+                              Items: =Filter(Audit_Operator_Failures, Audit_ID = varSelectedAudit.Title)
+                              LayoutMinHeight: =16
+                              LayoutMinWidth: =16
+                              TemplateSize: =188
+                              Visible: =varEditMode
+                              Width: =Parent.Width
+                            Children:
+                              - lblSavedOperatorType:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    Color: =cNavy
+                                    Font: =gFont
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =26
+                                    OnSelect: =Select(Parent)
+                                    PaddingLeft: =8
+                                    Size: =14
+                                    Text: =ThisItem.Failure_Label
+                                    Width: =Parent.TemplateWidth - 16
+                                    X: =8
+                                    Y: =6
+                              - galSavedOperatorPhotos:
+                                  Control: Gallery@2.15.0
+                                  Layout: Horizontal
+                                  Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
+                                  Properties:
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Height: =150
+                                    Items: =ThisItem.Attachments
+                                    LayoutMinHeight: =16
+                                    LayoutMinWidth: =16
+                                    TemplateSize: =150
+                                    Width: =Parent.TemplateWidth - 16
+                                    X: =8
+                                    Y: =lblSavedOperatorType.Y + lblSavedOperatorType.Height + 4
+                                  Children:
+                                    - imgSavedOperator:
+                                        Control: Image@2.2.3
+                                        Properties:
+                                          Height: =Parent.TemplateHeight - 12
+                                          Image: =ThisItem.Value
+                                          ImagePosition: =ImagePosition.Fit
+                                          OnSelect: =Select(Parent)
+                                          Width: =Parent.TemplateWidth - 12
+                                          X: =6
+                                          Y: =6
+                        - galSavedBag:
+                            Control: Gallery@2.15.0
+                            Layout: Vertical
+                            Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
+                            Properties:
+                              BorderColor: =RGBA(245, 245, 245, 1)
+                              Fill: =RGBA(255, 255, 255, 1)
+                              FillPortions: =0
+                              Height: =Max(CountRows(Filter(Audit_Bag_Failures, Audit_ID = varSelectedAudit.Title)), 0) * Self.TemplateSize
+                              Items: =Filter(Audit_Bag_Failures, Audit_ID = varSelectedAudit.Title)
+                              LayoutMinHeight: =16
+                              LayoutMinWidth: =16
+                              TemplateSize: =188
+                              Visible: =varEditMode
+                              Width: =Parent.Width
+                            Children:
+                              - lblSavedBagType:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    Color: =cNavy
+                                    Font: =gFont
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =26
+                                    OnSelect: =Select(Parent)
+                                    PaddingLeft: =8
+                                    Size: =14
+                                    Text: =ThisItem.Failure_Label
+                                    Width: =Parent.TemplateWidth - 16
+                                    X: =8
+                                    Y: =6
+                              - galSavedBagPhotos:
+                                  Control: Gallery@2.15.0
+                                  Layout: Horizontal
+                                  Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
+                                  Properties:
+                                    Fill: =RGBA(255, 255, 255, 1)
+                                    Height: =150
+                                    Items: =ThisItem.Attachments
+                                    LayoutMinHeight: =16
+                                    LayoutMinWidth: =16
+                                    TemplateSize: =150
+                                    Width: =Parent.TemplateWidth - 16
+                                    X: =8
+                                    Y: =lblSavedBagType.Y + lblSavedBagType.Height + 4
+                                  Children:
+                                    - imgSavedBag:
+                                        Control: Image@2.2.3
+                                        Properties:
+                                          Height: =Parent.TemplateHeight - 12
+                                          Image: =ThisItem.Value
+                                          ImagePosition: =ImagePosition.Fit
+                                          OnSelect: =Select(Parent)
+                                          Width: =Parent.TemplateWidth - 12
+                                          X: =6
+                                          Y: =6
             - FooterContainer_Audit:
                 Control: GroupContainer@1.5.0
                 Variant: AutoLayout

@@ -2508,7 +2508,7 @@ Screens:
                                   Properties:
                                     Fill: =RGBA(255, 255, 255, 1)
                                     Height: =184
-                                    Items: =ThisItem.Attachments
+                                    Items: =Filter(Split(ThisItem.Photo, "|##|"), Value <> "")
                                     LayoutMinHeight: =16
                                     LayoutMinWidth: =16
                                     TemplateSize: =92
@@ -2561,7 +2561,7 @@ Screens:
                                   Properties:
                                     Fill: =RGBA(255, 255, 255, 1)
                                     Height: =184
-                                    Items: =ThisItem.Attachments
+                                    Items: =Filter(Split(ThisItem.Photo, "|##|"), Value <> "")
                                     LayoutMinHeight: =16
                                     LayoutMinWidth: =16
                                     TemplateSize: =92
@@ -2614,7 +2614,7 @@ Screens:
                                   Properties:
                                     Fill: =RGBA(255, 255, 255, 1)
                                     Height: =184
-                                    Items: =ThisItem.Attachments
+                                    Items: =Filter(Split(ThisItem.Photo, "|##|"), Value <> "")
                                     LayoutMinHeight: =16
                                     LayoutMinWidth: =16
                                     TemplateSize: =92

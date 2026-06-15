@@ -61,7 +61,7 @@ def outer_gallery(name, ds):
         f"{tk}Properties:",
         f"{tp}Fill: =RGBA(255, 255, 255, 1)",
         f"{tp}Height: =184",
-        f"{tp}Items: =ThisItem.Attachments",
+        f'{tp}Items: =Filter(Split(ThisItem.Photo, "|##|"), Value <> "")',
         f"{tp}LayoutMinHeight: =16",
         f"{tp}LayoutMinWidth: =16",
         f"{tp}TemplateSize: =92",
@@ -156,7 +156,7 @@ def main():
     lines[foot:foot] = build_section()
 
     out = "".join(lines)
-    assert out.count(".Attachments") == 3, out.count(".Attachments")  # only nested gallery Items
+    assert out.count(".Attachments") == 0, out.count(".Attachments")  # photos now via Photo text column
     assert out.count("col") == out.count("col"), ""  # no-op guard
     assert "colMachinePhotosDetail" not in out and "colBagPhotosDetail" not in out
     assert out.count("\r") == cr, (out.count("\r"), cr)

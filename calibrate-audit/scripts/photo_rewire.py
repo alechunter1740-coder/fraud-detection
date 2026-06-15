@@ -169,7 +169,7 @@ def upsert_block(code):
     b.append(f'{ind}                Row_Key: varAuditKey & "|{code}",')
     b.append(f'{ind}                Customer: If(varSelectedCustomer.customer_name = \"-- Other --\", txtCustomerOther.Text, varSelectedCustomer.customer_name),')
     b.append(f'{ind}                Audit_Date: dteAudit.SelectedDate,')
-    b.append(f'{ind}                Photos: Concat(Filter(colPhotos, key = "{code}") As p, With({{j: JSON(p.photo, JSONFormat.IncludeBinaryData)}}, Mid(j, 2, Len(j) - 2)), "|##|")')
+    b.append(f'{ind}                Photo: Concat(Filter(colPhotos, key = "{code}") As p, With({{j: JSON(p.photo, JSONFormat.IncludeBinaryData)}}, Mid(j, 2, Len(j) - 2)), "|##|")')
     b.append(f'{ind}            }}')
     b.append(f'{ind}        ),')
     b.append(f'{ind}        If(!IsBlank(ex), Remove({lst}, ex))')

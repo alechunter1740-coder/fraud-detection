@@ -5908,7 +5908,7 @@ Screens:
                                               Row_Key: varAuditKey & "|MF_Low_Vacuum",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "MF_Low_Vacuum") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "MF_Low_Vacuum") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Machine_Failures, ex))
@@ -5925,7 +5925,7 @@ Screens:
                                               Row_Key: varAuditKey & "|MF_Cold_Seal",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "MF_Cold_Seal") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "MF_Cold_Seal") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Machine_Failures, ex))
@@ -5942,7 +5942,7 @@ Screens:
                                               Row_Key: varAuditKey & "|MF_Edge_Tear",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "MF_Edge_Tear") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "MF_Edge_Tear") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Machine_Failures, ex))
@@ -5959,7 +5959,7 @@ Screens:
                                               Row_Key: varAuditKey & "|MF_Pull_Back",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "MF_Pull_Back") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "MF_Pull_Back") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Machine_Failures, ex))
@@ -5976,7 +5976,7 @@ Screens:
                                               Row_Key: varAuditKey & "|MF_Burnt_Seals",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "MF_Burnt_Seals") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "MF_Burnt_Seals") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Machine_Failures, ex))
@@ -5993,7 +5993,7 @@ Screens:
                                               Row_Key: varAuditKey & "|MF_Other",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "MF_Other") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "MF_Other") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Machine_Failures, ex))
@@ -6010,7 +6010,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Meat_In_Seals",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "OF_Meat_In_Seals") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "OF_Meat_In_Seals") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6027,7 +6027,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Prod_Reject",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "OF_Prod_Reject") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "OF_Prod_Reject") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6044,7 +6044,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Multiple_Pleat",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "OF_Multiple_Pleat") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "OF_Multiple_Pleat") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6061,7 +6061,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Bag_Tear",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "OF_Bag_Tear") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "OF_Bag_Tear") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6078,7 +6078,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Incomplete_Seal",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "OF_Incomplete_Seal") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "OF_Incomplete_Seal") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6095,7 +6095,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Uncovered_Bone",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "OF_Uncovered_Bone") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "OF_Uncovered_Bone") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6112,7 +6112,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Pull_Back",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "OF_Pull_Back") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "OF_Pull_Back") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6129,7 +6129,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Two_Per_Platen",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "OF_Two_Per_Platen") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "OF_Two_Per_Platen") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6146,7 +6146,7 @@ Screens:
                                               Row_Key: varAuditKey & "|OF_Other",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "OF_Other") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "OF_Other") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Operator_Failures, ex))
@@ -6163,7 +6163,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Hole_Before_Shrink",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "BRF_Hole_Before_Shrink") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "BRF_Hole_Before_Shrink") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6180,7 +6180,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Hole_After_Shrink",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "BRF_Hole_After_Shrink") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "BRF_Hole_After_Shrink") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6197,7 +6197,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Covered_Bone",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "BRF_Covered_Bone") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "BRF_Covered_Bone") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6214,7 +6214,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Single_Pleat",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "BRF_Single_Pleat") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "BRF_Single_Pleat") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6231,7 +6231,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Edge_Tear",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "BRF_Edge_Tear") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "BRF_Edge_Tear") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6248,7 +6248,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Factory_Seal",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "BRF_Factory_Seal") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "BRF_Factory_Seal") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6265,7 +6265,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Heal_Break",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "BRF_Heal_Break") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "BRF_Heal_Break") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))
@@ -6282,7 +6282,7 @@ Screens:
                                               Row_Key: varAuditKey & "|BRF_Other",
                                               Customer: If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name),
                                               Audit_Date: dteAudit.SelectedDate,
-                                              Photos: Concat(Filter(colPhotos, key = "BRF_Other") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
+                                              Photo: Concat(Filter(colPhotos, key = "BRF_Other") As p, With({j: JSON(p.photo, JSONFormat.IncludeBinaryData)}, Mid(j, 2, Len(j) - 2)), "|##|")
                                           }
                                       ),
                                       If(!IsBlank(ex), Remove(Audit_Bag_Failures, ex))

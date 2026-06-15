@@ -167,7 +167,7 @@ def upsert_block(code):
     b.append(f'{ind}                Failure_Code: "{code}",')
     b.append(f'{ind}                Failure_Label: "{label}",')
     b.append(f'{ind}                Row_Key: varAuditKey & "|{code}",')
-    b.append(f'{ind}                Customer: varSavedCustomer,')
+    b.append(f'{ind}                Customer: If(varSelectedCustomer.customer_name = \"-- Other --\", txtCustomerOther.Text, varSelectedCustomer.customer_name),')
     b.append(f'{ind}                Audit_Date: dteAudit.SelectedDate,')
     b.append(f'{ind}                Attachments: ForAll(Filter(colPhotos, key = "{code}") As p,')
     b.append(f'{ind}                    {{Name: "{code}_" & Text(p.index) & ".jpg", Value: p.photo}})')

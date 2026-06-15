@@ -5907,7 +5907,7 @@ Screens:
                                               Failure_Label: "Low Vacuum",
                                               Row_Key: varAuditKey & "|MF_Low_Vacuum",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "MF_Low_Vacuum") As p,
                                                   {Name: "MF_Low_Vacuum_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -5925,7 +5925,7 @@ Screens:
                                               Failure_Label: "Cold Seal",
                                               Row_Key: varAuditKey & "|MF_Cold_Seal",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "MF_Cold_Seal") As p,
                                                   {Name: "MF_Cold_Seal_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -5943,7 +5943,7 @@ Screens:
                                               Failure_Label: "Edge Tear",
                                               Row_Key: varAuditKey & "|MF_Edge_Tear",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "MF_Edge_Tear") As p,
                                                   {Name: "MF_Edge_Tear_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -5961,7 +5961,7 @@ Screens:
                                               Failure_Label: "Pull Back",
                                               Row_Key: varAuditKey & "|MF_Pull_Back",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "MF_Pull_Back") As p,
                                                   {Name: "MF_Pull_Back_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -5979,7 +5979,7 @@ Screens:
                                               Failure_Label: "Burnt Seals",
                                               Row_Key: varAuditKey & "|MF_Burnt_Seals",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "MF_Burnt_Seals") As p,
                                                   {Name: "MF_Burnt_Seals_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -5997,7 +5997,7 @@ Screens:
                                               Failure_Label: "Other",
                                               Row_Key: varAuditKey & "|MF_Other",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "MF_Other") As p,
                                                   {Name: "MF_Other_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6015,7 +6015,7 @@ Screens:
                                               Failure_Label: "Meat In Seals",
                                               Row_Key: varAuditKey & "|OF_Meat_In_Seals",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "OF_Meat_In_Seals") As p,
                                                   {Name: "OF_Meat_In_Seals_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6033,7 +6033,7 @@ Screens:
                                               Failure_Label: "Product Related Reject",
                                               Row_Key: varAuditKey & "|OF_Prod_Reject",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "OF_Prod_Reject") As p,
                                                   {Name: "OF_Prod_Reject_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6051,7 +6051,7 @@ Screens:
                                               Failure_Label: "Multiple Pleat",
                                               Row_Key: varAuditKey & "|OF_Multiple_Pleat",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "OF_Multiple_Pleat") As p,
                                                   {Name: "OF_Multiple_Pleat_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6069,7 +6069,7 @@ Screens:
                                               Failure_Label: "Bag Tear",
                                               Row_Key: varAuditKey & "|OF_Bag_Tear",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "OF_Bag_Tear") As p,
                                                   {Name: "OF_Bag_Tear_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6087,7 +6087,7 @@ Screens:
                                               Failure_Label: "Incomplete Seal",
                                               Row_Key: varAuditKey & "|OF_Incomplete_Seal",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "OF_Incomplete_Seal") As p,
                                                   {Name: "OF_Incomplete_Seal_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6105,7 +6105,7 @@ Screens:
                                               Failure_Label: "Uncovered Bone Puncture",
                                               Row_Key: varAuditKey & "|OF_Uncovered_Bone",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "OF_Uncovered_Bone") As p,
                                                   {Name: "OF_Uncovered_Bone_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6123,7 +6123,7 @@ Screens:
                                               Failure_Label: "Pull Back Meat DTS",
                                               Row_Key: varAuditKey & "|OF_Pull_Back",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "OF_Pull_Back") As p,
                                                   {Name: "OF_Pull_Back_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6141,7 +6141,7 @@ Screens:
                                               Failure_Label: "Two Per Platen",
                                               Row_Key: varAuditKey & "|OF_Two_Per_Platen",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "OF_Two_Per_Platen") As p,
                                                   {Name: "OF_Two_Per_Platen_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6159,7 +6159,7 @@ Screens:
                                               Failure_Label: "Other",
                                               Row_Key: varAuditKey & "|OF_Other",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "OF_Other") As p,
                                                   {Name: "OF_Other_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6177,7 +6177,7 @@ Screens:
                                               Failure_Label: "Hole Before Shrink",
                                               Row_Key: varAuditKey & "|BRF_Hole_Before_Shrink",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "BRF_Hole_Before_Shrink") As p,
                                                   {Name: "BRF_Hole_Before_Shrink_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6195,7 +6195,7 @@ Screens:
                                               Failure_Label: "Hole After Shrink",
                                               Row_Key: varAuditKey & "|BRF_Hole_After_Shrink",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "BRF_Hole_After_Shrink") As p,
                                                   {Name: "BRF_Hole_After_Shrink_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6213,7 +6213,7 @@ Screens:
                                               Failure_Label: "Covered Bone Puncture",
                                               Row_Key: varAuditKey & "|BRF_Covered_Bone",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "BRF_Covered_Bone") As p,
                                                   {Name: "BRF_Covered_Bone_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6231,7 +6231,7 @@ Screens:
                                               Failure_Label: "Single Pleat",
                                               Row_Key: varAuditKey & "|BRF_Single_Pleat",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "BRF_Single_Pleat") As p,
                                                   {Name: "BRF_Single_Pleat_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6249,7 +6249,7 @@ Screens:
                                               Failure_Label: "Edge Tear",
                                               Row_Key: varAuditKey & "|BRF_Edge_Tear",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "BRF_Edge_Tear") As p,
                                                   {Name: "BRF_Edge_Tear_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6267,7 +6267,7 @@ Screens:
                                               Failure_Label: "Factory Seal",
                                               Row_Key: varAuditKey & "|BRF_Factory_Seal",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "BRF_Factory_Seal") As p,
                                                   {Name: "BRF_Factory_Seal_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6285,7 +6285,7 @@ Screens:
                                               Failure_Label: "Heel Break",
                                               Row_Key: varAuditKey & "|BRF_Heal_Break",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "BRF_Heal_Break") As p,
                                                   {Name: "BRF_Heal_Break_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }
@@ -6303,7 +6303,7 @@ Screens:
                                               Failure_Label: "Other",
                                               Row_Key: varAuditKey & "|BRF_Other",
                                               Customer: varSavedCustomer,
-                                              Audit_Date: varSavedDate,
+                                              Audit_Date: dteAudit.SelectedDate,
                                               Attachments: ForAll(Filter(colPhotos, key = "BRF_Other") As p,
                                                   {Name: "BRF_Other_" & Text(p.index) & ".jpg", Value: p.photo})
                                           }

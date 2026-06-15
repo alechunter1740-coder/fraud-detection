@@ -10,6 +10,7 @@ App:
   Properties:
     OnStart: |-
       =//On Start
+      ClearCollect(colAuditData, Calibrate_Audit_Data);
       Set(cNavy,      RGBA(0, 57, 90, 1));
       Set(cBlue,      RGBA(0, 161, 222, 1));
       Set(cGreen,     RGBA(0, 165, 81, 1));

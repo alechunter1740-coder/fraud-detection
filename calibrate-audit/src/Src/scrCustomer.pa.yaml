@@ -30,7 +30,7 @@ Screens:
                     CountRows(
                         Filter(
                             Distinct(
-                                Filter(Calibrate_Audit_Data, !IsBlank(Location) && Location <> ""),
+                                Filter(colAuditData, !IsBlank(Location) && Location <> ""),
                                 Location
                             ),
                             Value = varSelectedAudit.Location
@@ -347,141 +347,43 @@ Screens:
                                     Wrap: =false
                                     X: =24
                                     Y: =10
-                              - lblCustomerSelected:
-                                  Control: Label@2.5.1
+                              - cmbCustomer:
+                                  Control: ModernCombobox@1.1.0
                                   Properties:
-                                    BorderColor: =RGBA(229, 229, 229, 1)
-                                    BorderThickness: =1
-                                    Color: =If(IsBlank(varSelectedCustomer.customer_name), RGBA(166, 166, 166, 1), cText)
-                                    Fill: =RGBA(248, 248, 248, 1)
-                                    Font: =gFont
-                                    Height: =38
-                                    HoverBorderColor: =cNavy
-                                    HoverFill: =RGBA(245, 248, 252, 1)
-                                    OnSelect: =Set(varCustomerSearchVisible, true)
-                                    PaddingLeft: =8
-                                    Size: =14
-                                    Text: =If(IsBlank(varSelectedCustomer.customer_name), "Search customer...", varSelectedCustomer.customer_name)
-                                    Width: =Parent.Width - 48
-                                    X: =24
-                                    Y: =lblCustomer.Y + lblCustomer.Height + 4
-                              - txtCustomerSearch:
-                                  Control: Classic/TextInput@2.3.2
-                                  Properties:
-                                    BorderColor: =cNavy
-                                    BorderThickness: =1
-                                    Color: =cText
-                                    Default: =varCustomerSearchText
-                                    DelayOutput: =true
-                                    Fill: =RGBA(248, 248, 248, 1)
-                                    Font: =gFont
-                                    Height: =38
-                                    HintText: ="Type to search customers..."
-                                    HoverBorderColor: =cNavy
-                                    HoverFill: =RGBA(245, 248, 252, 1)
-                                    OnChange: =Set(varSelectedCustomer, Blank()); Set(varCustomerSearchText, Self.Text)
-                                    RadiusBottomLeft: =4
-                                    RadiusBottomRight: =4
-                                    RadiusTopLeft: =4
-                                    RadiusTopRight: =4
-                                    Visible: =varCustomerSearchVisible
-                                    Width: =lblCustomerSelected.Width
-                                    X: =24
-                                    Y: =lblCustomer.Y + lblCustomer.Height + 4
-                              - galCustomerSearch:
-                                  Control: Gallery@2.15.0
-                                  Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
-                                  Properties:
-                                    BorderColor: =RGBA(200, 200, 200, 1)
-                                    BorderThickness: =1
-                                    Fill: =RGBA(255, 255, 255, 1)
-                                    Height: =Min(CountRows(galCustomerSearch.AllItems) * 40, 200)
+                                    DefaultSelectedItems: =If(!IsBlank(varSelectedCustomer.customer_name), Table({customer_name: varSelectedCustomer.customer_name, customer_nbr: varSelectedCustomer.customer_nbr, customer_location: varSelectedCustomer.customer_location}), Blank())
+                                    InputTextPlaceholder: ="Type to search customers..."
+                                    IsSearchable: =true
+                                    ItemDisplayText: =ThisItem.customer_name
                                     Items: |-
                                       =If(
-                                          Len(txtCustomerSearch.Text) >= 2,
+                                          Len(Self.SearchText) >= 2,
                                           Table(
                                               {customer_name: "-- Other --", customer_nbr: "", customer_location: ""},
-                                              Filter(Customers, StartsWith(customer_name, txtCustomerSearch.Text))
+                                              Filter(Customers, StartsWith(customer_name, Self.SearchText))
                                           ),
-                                          Blank()
+                                          Table({customer_name: "-- Other --", customer_nbr: "", customer_location: ""})
                                       )
-                                    TemplateSize: =40
-                                    Visible: =varCustomerSearchVisible && Len(txtCustomerSearch.Text) >= 2
-                                    Width: =Parent.Width - 48
+                                    OnChange: |-
+                                      =Set(varSelectedCustomer, Self.Selected);
+                                      Set(varSelectedLocation, If(Self.Selected.customer_name = "-- Other --", Blank(), {Value: Self.Selected.customer_location}));
+                                      Set(varPriorRecordsExist,
+                                          CountRows(
+                                              Filter(colAuditData,
+                                                  Customer = If(Self.Selected.customer_name = "-- Other --", txtCustomerOther.Text, Self.Selected.customer_name) &&
+                                                  Location = Self.Selected.customer_location
+                                              )
+                                          ) > 0
+                                      );
+                                      Set(varSelectedLineNumber, Blank());
+                                      Set(varSelectedSerialNumber, Blank());
+                                      Set(varSelectedLotBatch, Blank());
+                                      Set(varSelectedBoxCarton, Blank());
+                                      Set(varSelectedRollNumber, Blank())
+                                    SelectMultiple: =false
+                                    Size: =18
+                                    Width: =Parent.Width - 32
                                     X: =24
-                                    Y: =txtCustomerSearch.Y + txtCustomerSearch.Height
-                                  Children:
-                                    - rectGalCustomerBg:
-                                        Control: Rectangle@2.3.0
-                                        Properties:
-                                          Fill: =If(ThisItem.IsSelected, RGBA(235, 244, 250, 1), RGBA(255, 255, 255, 1))
-                                          Height: =Parent.TemplateHeight
-                                          Width: =Parent.Width
-                                    - lblGalCustomerName:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          AutoHeight: =true
-                                          Color: =cNavy
-                                          Font: =gFont
-                                          FontWeight: =FontWeight.Semibold
-                                          Height: =Parent.TemplateHeight
-                                          PaddingLeft: =12
-                                          PaddingTop: =0
-                                          Size: =14
-                                          Text: =ThisItem.customer_name
-                                          Width: =Parent.Width * 0.6
-                                    - lblGalCustomerLocation:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          Align: =Align.Right
-                                          Color: =cText2
-                                          Font: =gFont
-                                          Height: =Parent.TemplateHeight
-                                          PaddingRight: =12
-                                          PaddingTop: =0
-                                          Size: =11
-                                          Text: =ThisItem.customer_location
-                                          Width: =Parent.Width * 0.4
-                                          X: =Parent.Width * 0.6
-                                    - rectGalCustomerDivider:
-                                        Control: Rectangle@2.3.0
-                                        Properties:
-                                          Fill: =RGBA(237, 235, 233, 1)
-                                          Height: =1
-                                          Width: =Parent.Width
-                                          Y: =Parent.TemplateHeight - 1
-                                    - btnGalCustomerSelect:
-                                        Control: Classic/Button@2.2.0
-                                        Properties:
-                                          BorderColor: =RGBA(0, 0, 0, 0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =RGBA(0, 0, 0, 0)
-                                          Fill: =RGBA(0, 0, 0, 0)
-                                          Height: =Parent.TemplateHeight
-                                          HoverColor: =RGBA(0, 0, 0, 0)
-                                          HoverFill: =RGBA(235, 244, 250, 0.6)
-                                          OnSelect: |-
-                                            =Set(varSelectedCustomer, ThisItem);
-                                            Set(varSelectedLocation, {Value: ThisItem.customer_location});
-                                            Set(varCustomerSearchVisible, false);
-                                            Set(varCustomerSearchText, "");
-                                            Set(varPriorRecordsExist,
-                                                CountRows(
-                                                    Filter(
-                                                        Calibrate_Audit_Data,
-                                                        Customer = If(ThisItem.customer_name = "-- Other --", txtCustomerOther.Text, ThisItem.customer_name) &&
-                                                        Location = ThisItem.customer_location
-                                                    )
-                                                ) > 0
-                                            );
-                                            Set(varSelectedLineNumber, Blank());
-                                            Set(varSelectedSerialNumber, Blank());
-                                            Set(varSelectedLotBatch, Blank());
-                                            Set(varSelectedBoxCarton, Blank());
-                                            Set(varSelectedRollNumber, Blank())
-                                          PressedFill: =RGBA(210, 228, 240, 0.8)
-                                          Text: =""
-                                          Width: =Parent.Width
+                                    Y: =lblCustomer.Y + lblCustomer.Height + 4
                               - txtCustomerOther:
                                   Control: ModernTextInput@1.0.0
                                   Properties:
@@ -587,7 +489,7 @@ Screens:
                                               Filter(
                                                   Distinct(
                                                       Filter(
-                                                          Calibrate_Audit_Data,
+                                                          colAuditData,
                                                           !IsBlank(Location) && Location <> "" && Trim(Location) <> ""
                                                       ),
                                                       Location
@@ -641,7 +543,7 @@ Screens:
                                             Set(varPriorRecordsExist,
                                                 CountRows(
                                                     Filter(
-                                                        Calibrate_Audit_Data,
+                                                        colAuditData,
                                                         Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
                                                         Location = If(ThisItem.Value = "-- Other --", txtLocationOther.Text, ThisItem.Value)
                                                     )
@@ -847,6 +749,7 @@ Screens:
                               DataField: ="Audit Desc"
                               Default: =""
                               DisplayName: ="Audit Description"
+                              Height: =200
                               MaxLength: =4000
                               Required: =false
                               Update: =txtAuditDesc.Text
@@ -858,13 +761,26 @@ Screens:
                               - lblAuditDesc:
                                   Control: Text@0.0.51
                                   Properties:
-                                    Height: =22
+                                    Height: =200
                                     Text: ="Audit Description"
                                     Weight: ='TextCanvas.Weight'.Semibold
                                     Width: =Parent.Width - 48
                                     Wrap: =false
                                     X: =24
                                     Y: =10
+                              - lblAuditDescHint:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    Color: =cText2
+                                    Font: =gFont
+                                    Height: =34
+                                    Size: =11
+                                    Text: ="Briefly note what is being audited and why — e.g. ""Routine 24-hr hold check on Line 3 after seal-leak complaints."" Add anything the reviewer should know."
+                                    VerticalAlign: =VerticalAlign.Top
+                                    Width: =Parent.Width - 48
+                                    Wrap: =true
+                                    X: =24
+                                    Y: =lblAuditDesc.Y + lblAuditDesc.Height + 2
                               - txtAuditDesc:
                                   Control: ModernTextInput@1.0.0
                                   Properties:
@@ -881,7 +797,7 @@ Screens:
                                     Type: =TextInputType.Multiline
                                     Width: =Parent.Width - 48
                                     X: =24
-                                    Y: =lblAuditDesc.Y + lblAuditDesc.Height + 4
+                                    Y: =lblAuditDescHint.Y + lblAuditDescHint.Height + 4
                         - crdProtein:
                             Control: TypedDataCard@1.0.7
                             Variant: TextualEdit
@@ -1179,7 +1095,7 @@ Screens:
                                               Sort(
                                                   Distinct(
                                                       Filter(
-                                                          Calibrate_Audit_Data,
+                                                          colAuditData,
                                                           Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
                                                           Location = If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value) &&
                                                           !IsBlank(Bag) && Bag <> ""
@@ -1391,7 +1307,7 @@ Screens:
                                                   Filter(
                                                       Distinct(
                                                           Filter(
-                                                              Calibrate_Audit_Data,
+                                                              colAuditData,
                                                               Customer = varSelectedAudit.Customer &&
                                                               Location = varSelectedAudit.Location &&
                                                               !IsBlank(Machine_Line_Number) && Machine_Line_Number <> ""
@@ -1413,7 +1329,7 @@ Screens:
                                           Sort(
                                               Distinct(
                                                   Filter(
-                                                      Calibrate_Audit_Data,
+                                                      colAuditData,
                                                       Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
                                                       Location = If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value) &&
                                                       !IsBlank(Machine_Line_Number) && Machine_Line_Number <> ""
@@ -1446,7 +1362,7 @@ Screens:
                                                       Filter(
                                                           Distinct(
                                                               Filter(
-                                                                  Calibrate_Audit_Data,
+                                                                  colAuditData,
                                                                   Customer = varSelectedAudit.Customer &&
                                                                   Location = varSelectedAudit.Location &&
                                                                   !IsBlank(Machine_Line_Number) && Machine_Line_Number <> ""
@@ -1514,7 +1430,7 @@ Screens:
                                                   Filter(
                                                       Distinct(
                                                           Filter(
-                                                              Calibrate_Audit_Data,
+                                                              colAuditData,
                                                               Customer = varSelectedAudit.Customer &&
                                                               Location = varSelectedAudit.Location &&
                                                               !IsBlank(Machine_Serial_Number) && Machine_Serial_Number <> ""
@@ -1536,7 +1452,7 @@ Screens:
                                           Sort(
                                               Distinct(
                                                   Filter(
-                                                      Calibrate_Audit_Data,
+                                                      colAuditData,
                                                       Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
                                                       Location = If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value) &&
                                                       !IsBlank(Machine_Serial_Number) && Machine_Serial_Number <> ""
@@ -1569,7 +1485,7 @@ Screens:
                                                       Filter(
                                                           Distinct(
                                                               Filter(
-                                                                  Calibrate_Audit_Data,
+                                                                  colAuditData,
                                                                   Customer = varSelectedAudit.Customer &&
                                                                   Location = varSelectedAudit.Location &&
                                                                   !IsBlank(Machine_Serial_Number) && Machine_Serial_Number <> ""
@@ -1636,7 +1552,7 @@ Screens:
                                                   Filter(
                                                       Distinct(
                                                           Filter(
-                                                              Calibrate_Audit_Data,
+                                                              colAuditData,
                                                               Customer = varSelectedAudit.Customer &&
                                                               Location = varSelectedAudit.Location &&
                                                               !IsBlank(Lot_Batch_Number) && Lot_Batch_Number <> ""
@@ -1658,7 +1574,7 @@ Screens:
                                           Sort(
                                               Distinct(
                                                   Filter(
-                                                      Calibrate_Audit_Data,
+                                                      colAuditData,
                                                       Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
                                                       Location = If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value) &&
                                                       !IsBlank(Lot_Batch_Number) && Lot_Batch_Number <> ""
@@ -1691,7 +1607,7 @@ Screens:
                                                       Filter(
                                                           Distinct(
                                                               Filter(
-                                                                  Calibrate_Audit_Data,
+                                                                  colAuditData,
                                                                   Customer = varSelectedAudit.Customer &&
                                                                   Location = varSelectedAudit.Location &&
                                                                   !IsBlank(Lot_Batch_Number) && Lot_Batch_Number <> ""
@@ -1759,7 +1675,7 @@ Screens:
                                                   Filter(
                                                       Distinct(
                                                           Filter(
-                                                              Calibrate_Audit_Data,
+                                                              colAuditData,
                                                               Customer = varSelectedAudit.Customer &&
                                                               Location = varSelectedAudit.Location &&
                                                               !IsBlank(Box_Carton_Number) && Box_Carton_Number <> ""
@@ -1781,7 +1697,7 @@ Screens:
                                           Sort(
                                               Distinct(
                                                   Filter(
-                                                      Calibrate_Audit_Data,
+                                                      colAuditData,
                                                       Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
                                                       Location = If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value) &&
                                                       !IsBlank(Box_Carton_Number) && Box_Carton_Number <> ""
@@ -1814,7 +1730,7 @@ Screens:
                                                       Filter(
                                                           Distinct(
                                                               Filter(
-                                                                  Calibrate_Audit_Data,
+                                                                  colAuditData,
                                                                   Customer = varSelectedAudit.Customer &&
                                                                   Location = varSelectedAudit.Location &&
                                                                   !IsBlank(Box_Carton_Number) && Box_Carton_Number <> ""
@@ -1883,7 +1799,7 @@ Screens:
                                                   Filter(
                                                       Distinct(
                                                           Filter(
-                                                              Calibrate_Audit_Data,
+                                                              colAuditData,
                                                               Customer = varSelectedAudit.Customer &&
                                                               Location = varSelectedAudit.Location &&
                                                               !IsBlank(Roll_Number) && Roll_Number <> ""
@@ -1905,7 +1821,7 @@ Screens:
                                           Sort(
                                               Distinct(
                                                   Filter(
-                                                      Calibrate_Audit_Data,
+                                                      colAuditData,
                                                       Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
                                                       Location = If(varSelectedLocation.Value = "-- Other --", txtLocationOther.Text, varSelectedLocation.Value) &&
                                                       !IsBlank(Roll_Number) && Roll_Number <> ""
@@ -1938,7 +1854,7 @@ Screens:
                                                       Filter(
                                                           Distinct(
                                                               Filter(
-                                                                  Calibrate_Audit_Data,
+                                                                  colAuditData,
                                                                   Customer = varSelectedAudit.Customer &&
                                                                   Location = varSelectedAudit.Location &&
                                                                   !IsBlank(Roll_Number) && Roll_Number <> ""
@@ -2103,6 +2019,7 @@ Screens:
                         HoverFill: =cNavy
                         OnSelect: |-
                           =Refresh(Calibrate_Audit_Data);
+                          ClearCollect(colAuditData, Calibrate_Audit_Data);
                           ClearCollect(colCustomers, Sort(Customers, customer_name, SortOrder.Ascending));
                           Collect(colCustomers, {customer_name: "-- Other --", customer_nbr: "", customer_location: ""});
                           Refresh(Audit_Bag_List);

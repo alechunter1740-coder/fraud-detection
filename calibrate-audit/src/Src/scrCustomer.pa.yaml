@@ -353,32 +353,30 @@ Screens:
                                     DefaultSelectedItems: |-
                                       =If(
                                           !IsBlank(varSelectedCustomer.customer_name),
-                                          Table({customer_name: varSelectedCustomer.customer_name, customer_nbr: varSelectedCustomer.customer_nbr, customer_location: varSelectedCustomer.customer_location}),
+                                          Table({Value: varSelectedCustomer.customer_name}),
                                           Blank()
                                       )
                                     InputTextPlaceholder: ="Type to search customers..."
                                     IsSearchable: =true
-                                    ItemDisplayText: =ThisItem.customer_name
+                                    ItemDisplayText: =ThisItem.Value
                                     Items: |-
                                       =If(
                                           Len(Self.SearchText) >= 2,
                                           Table(
-                                              {customer_name: "-- Other --", customer_nbr: "", customer_location: ""},
-                                              Filter(Customers, StartsWith(customer_name, Self.SearchText))
+                                              {Value: "-- Other --"},
+                                              Distinct(Filter(colCustomers, customer_name <> "-- Other --" && StartsWith(customer_name, Self.SearchText)), customer_name)
                                           ),
-                                          Table({customer_name: "-- Other --", customer_nbr: "", customer_location: ""})
+                                          Table({Value: "-- Other --"})
                                       )
                                     OnChange: |-
-                                      =Set(varSelectedCustomer, Self.Selected);
-                                      Set(varSelectedLocation, If(Self.Selected.customer_name = "-- Other --", Blank(), {Value: Self.Selected.customer_location}));
-                                      Set(varPriorRecordsExist,
-                                          CountRows(
-                                              Filter(colAuditData,
-                                                  Customer = If(Self.Selected.customer_name = "-- Other --", txtCustomerOther.Text, Self.Selected.customer_name) &&
-                                                  Location = Self.Selected.customer_location
-                                              )
-                                          ) > 0
+                                      =Set(varSelectedCustomer,
+                                          If(Self.Selected.Value = "-- Other --",
+                                              {customer_name: "-- Other --", customer_nbr: "", customer_location: ""},
+                                              {customer_name: Self.Selected.Value, customer_nbr: LookUp(colCustomers, customer_name = Self.Selected.Value).customer_nbr, customer_location: ""}
+                                          )
                                       );
+                                      Set(varSelectedLocation, Blank());
+                                      Set(varPriorRecordsExist, false);
                                       Set(varSelectedLineNumber, Blank());
                                       Set(varSelectedSerialNumber, Blank());
                                       Set(varSelectedLotBatch, Blank());
@@ -451,17 +449,12 @@ Screens:
                                     ItemDisplayText: =ThisItem.Value
                                     Items: |-
                                       =Table(
-                                          Sort(
-                                              Distinct(
-                                                  Filter(
-                                                      colAuditData,
-                                                      Customer = If(varSelectedCustomer.customer_name = "-- Other --", txtCustomerOther.Text, varSelectedCustomer.customer_name) &&
-                                                      !IsBlank(Location) && Location <> ""
-                                                  ),
-                                                  Location
+                                          Distinct(
+                                              Filter(colCustomers,
+                                                  customer_name = If(varSelectedCustomer.customer_name = "-- Other --", "", varSelectedCustomer.customer_name) &&
+                                                  !IsBlank(customer_location) && customer_location <> ""
                                               ),
-                                              Value,
-                                              SortOrder.Ascending
+                                              customer_location
                                           ),
                                           {Value: "-- Other --"}
                                       )
